@@ -49,8 +49,8 @@ def main():
     }
 
 
-    resp = make_response(render_template("page.html", name = render_data))
-    
+    resp = make_response(render_template("Verify.html", name = render_data))
+
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
@@ -59,4 +59,4 @@ def main():
 
 if __name__ == "__main__":
     app.debug = DEBUG
-    app.run() 
+    app.run()
