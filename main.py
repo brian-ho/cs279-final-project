@@ -51,7 +51,7 @@ def verify():
     }
 
 
-    resp = make_response(render_template("Verify.html", name = render_data))
+    resp = make_response(render_template("page.html", name = render_data))
 
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
