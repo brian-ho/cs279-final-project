@@ -7,8 +7,8 @@ from boto.mturk.price import Price
 
 
 #Start Configuration Variables
-AWS_ACCESS_KEY_ID = "XXX"
-AWS_SECRET_ACCESS_KEY = "XXX"
+AWS_ACCESS_KEY_ID = "os.environ['AWS_ACCESS_KEY_ID']"
+AWS_SECRET_ACCESS_KEY = "os.environ['AWS_ACCESS_KEY']"
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 #End Configuration Variables
@@ -27,7 +27,6 @@ def main():
 
 @app.route('/verify')#, methods=['GET', 'POST'])
 def verify():
-
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
@@ -49,9 +48,7 @@ def verify():
         "some_info_to_pass": request.args.get("someInfoToPass")
     }
 
-
     resp = make_response(render_template("verify.html", name = render_data))
-
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
@@ -59,7 +56,6 @@ def verify():
 
 @app.route('/edit')#, methods=['GET', 'POST'])
 def edit():
-
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
@@ -81,9 +77,7 @@ def edit():
         "some_info_to_pass": request.args.get("someInfoToPass")
     }
 
-
     resp = make_response(render_template("edit.html", name = render_data))
-
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
@@ -91,7 +85,6 @@ def edit():
 
 @app.route('/rank')#, methods=['GET', 'POST'])
 def rank():
-
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
@@ -113,9 +106,7 @@ def rank():
         "some_info_to_pass": request.args.get("someInfoToPass")
     }
 
-
     resp = make_response(render_template("rank.html", name = render_data))
-
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
