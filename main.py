@@ -23,7 +23,7 @@ app = Flask(__name__, static_url_path='')
 
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/verify', methods=['GET', 'POST'])
 def main():
 
 #The following code segment can be used to check if the turker has accepted the task yet
