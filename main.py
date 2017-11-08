@@ -21,7 +21,9 @@ else:
 
 app = Flask(__name__, static_url_path='')
 
-
+@app.route('/', methods=['GET', 'POST'])
+def main():
+    return render_template('home.html')
 
 @app.route('/verify', methods=['GET', 'POST'])
 def main():
