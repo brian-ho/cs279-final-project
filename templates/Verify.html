@@ -14,38 +14,44 @@
 
 	<div class="row">
   		<div class="col-sm-9">
+        <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
   			<h1>Verification</h1>
   			<p>Please uncheck any images that do not seem to match the description.</p>
 
   			<p class="lead">This is where the description will be.</p>
 
   			<div class="checkbox">
-			  <label>
-			    <input type="checkbox" value="" checked>
-			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
-			  </label>
-			</div>
+  			  <label>
+  			    <input type="checkbox" value="" checked>
+  			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
+  			  </label>
+  			</div>
   			<div class="checkbox">
-			  <label>
-			    <input type="checkbox" value="" checked>
-			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
-			  </label>
-			</div>
+  			  <label>
+  			    <input type="checkbox" value="" checked>
+  			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
+  			  </label>
+  			</div>
   			<div class="checkbox">
-			  <label>
-			    <input type="checkbox" value="" checked>
-			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
-			  </label>
-			</div>
+  			  <label>
+  			    <input type="checkbox" value="" checked>
+  			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
+  			  </label>
+  			</div>
   			<div class="checkbox">
-			  <label>
-			    <input type="checkbox" value="" checked>
-			    <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
-			  </label>
-			</div>
-
+  			  <label>
+            <input type="checkbox" value="" checked>
+		        <img src="https://raw.githubusercontent.com/brian-ho/cs279-final-project/master/images/object1.png" alt="Object 1" height="200" width="181">
+  			  </label>
+		    </div>
+        <input type="hidden" id="user-input" value="" name="user-input"/>
+        <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
+        <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
+        <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+      </form>
 			<br>
-  			<button type="button" class="btn btn-primary">Submit</button>
+  			<!--<button type="button" class="btn btn-primary">Submit</button>-->
 
   		</div>
 	</div>
