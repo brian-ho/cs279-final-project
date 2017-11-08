@@ -21,11 +21,11 @@ else:
 
 app = Flask(__name__, static_url_path='')
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def main():
     return render_template('home.html')
 
-@app.route('/verify', methods=['GET', 'POST'])
+@app.route('/verify')#, methods=['GET', 'POST'])
 def verify():
 
 #The following code segment can be used to check if the turker has accepted the task yet
