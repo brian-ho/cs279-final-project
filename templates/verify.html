@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Edit Description</title>
+  <title>Verify Selections</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 
@@ -43,14 +43,14 @@
 		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 4" height="200" width="200">
   			  </label>
 		    </div>
+        <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
+        <br>
         <input type="hidden" id="user-input" value="" name="user-input"/>
         <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
         <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
         <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
         <input type="submit" class="btn btn-primary" value="Submit"/>
       </form>
-			<br>
-  			<!--<button type="button" class="btn btn-primary">Submit</button>-->
 
   		</div>
 	</div>
