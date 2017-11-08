@@ -26,7 +26,7 @@ def main():
     return render_template('home.html')
 
 @app.route('/verify', methods=['GET', 'POST'])
-def main():
+def verify():
 
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
