@@ -12,41 +12,36 @@
 <body>
 
 	<div class="row">
-  		<div class="col-sm-9">
-        <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
   			<h1>Verification</h1>
   			<p>Please uncheck any images that do not seem to match the description.</p>
-
-        <div id="street-view"></div>
-        <script>
-          var panorama;
-          function initialize() {
-            panorama = new google.maps.StreetViewPanorama(
-                document.getElementById('street-view'),
-                {
-                  position: {lat: 37.869260, lng: -122.254811},
-                  pov: {heading: 165, pitch: 0},
-                  zoom: 1
-                });
-          }
-        </script>
-        <script async defer
-             src="{{ name.gmaps_url }}">
-        </script>
-
-  			<p class="lead">This is where the description will be.</p>
-
-        <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
-        <br>
-        <input type="hidden" id="user-input" value="" name="user-input"/>
-        <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
-        <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
-        <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
-        <input type="submit" class="btn btn-primary" value="Submit"/>
-      </form>
-
+    		<div class="col-sm-9">
+          <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
+      			<p class="lead">This is where the description will be.</p>
+            <div id="street-view" style="height:200px; width:600px"></div>
+            <br>
+            <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
+            <br>
+            <input type="hidden" id="user-input" value="" name="user-input"/>
+            <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
+            <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
+            <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+            <input type="submit" class="btn btn-primary" value="Submit"/>
+          </form>
   		</div>
 	</div>
 
 </body>
+<script>
+  var panorama;
+  function initialize() {
+    panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
+        { position: {lat: 37.869260, lng: -122.254811},
+          pov: {heading: 165, pitch: 0},
+          zoom: 1
+        });
+  }
+</script>
+<script async defer
+     src="{{ name.gmaps_url}}">
+</script>
 </html>
