@@ -1,0 +1,52 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Verify Selections</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+	<div class="row">
+  		<div class="col-sm-9">
+        <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
+  			<h1>Verification</h1>
+  			<p>Please uncheck any images that do not seem to match the description.</p>
+
+        <div id="street-view"></div>
+        <script>
+          var panorama;
+          function initialize() {
+            panorama = new google.maps.StreetViewPanorama(
+                document.getElementById('street-view'),
+                {
+                  position: {lat: 37.869260, lng: -122.254811},
+                  pov: {heading: 165, pitch: 0},
+                  zoom: 1
+                });
+          }
+        </script>
+        <script async defer
+             src="{{ name.gmaps_url }}">
+        </script>
+
+  			<p class="lead">This is where the description will be.</p>
+
+        <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
+        <br>
+        <input type="hidden" id="user-input" value="" name="user-input"/>
+        <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
+        <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
+        <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+      </form>
+
+  		</div>
+	</div>
+
+</body>
+</html>
