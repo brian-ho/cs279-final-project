@@ -15,12 +15,28 @@
 	<div class="row">
   		<div class="col-sm-9">
 
-  			<h1>Edit Description</h1>
-  			<p>If you believe that the desription can be improved to help in finding the target object, please edit it below and click "Submit"</p>
+        <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
 
-  			<textarea class="form-control" rows="10">This is where the starting description will be.</textarea>
+  			<h1>Find object</h1>
+
+        <p>Please find and click on the object described in the field below in Google Street View as quickly as possible.</p>
+
+        <iframe src="//www.google.com/maps/embed/v1/streetview?pano=4U-oRQCNsC6u7r8gp02sLA
+            &heading=5
+            &fov=75
+            &key=AIzaSyAlKScjGDYA1wq146zd8nH4vGD6rgj18hE">
+        </iframe>
+
+  			<textarea class="form-control" name="edited_description" rows="10">This is where the starting description will be.</textarea>
   			<br>
-  			<button type="button" class="btn btn-primary">Submit</button>
+        <p>After finding and clicking on the object, please edit the description above if you you believe that it can be improved to help in finding the target object, then click "Submit"</p>
+
+        <input type="hidden" id="user-input" value="" name="user-input"/>
+        <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
+        <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
+        <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+        <input type="submit" class="btn btn-primary" value="Submit"/>
+      </form>
 
   		</div>
 	</div>
