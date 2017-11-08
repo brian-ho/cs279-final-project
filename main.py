@@ -46,7 +46,7 @@ def verify():
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
         "some_info_to_pass": request.args.get("someInfoToPass"),
-        "img1": "img1",
+        "img1": : "img1",
         "img2": "img2",
         "img3": "img3",
         "img4": "img4"
