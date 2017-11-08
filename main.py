@@ -47,7 +47,7 @@ def find():
         "assignment_id": request.args.get("assignmentId"),
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass")
+        "some_info_to_pass": request.args.get("someInfoToPass"),
         "some_info_to_pass": request.args.get("someInfoToPass"),
         "gmaps_url": "https://maps.googleapis.com/maps/api/js?key=Y"+GMAPS_KEY+"&callback=initialize"
         }
