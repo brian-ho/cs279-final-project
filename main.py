@@ -36,7 +36,6 @@ def verify():
         #Our worker accepted the task
         pass
 
-
     '''
     We're creating a dict with which we'll render our template page.html
     Note we are grabbing GET Parameters
@@ -52,6 +51,70 @@ def verify():
 
 
     resp = make_response(render_template("verify.html", name = render_data))
+
+    #This is particularly nasty gotcha.
+    #Without this header, your iFrame will not render in Amazon
+    resp.headers['x-frame-options'] = 'this_can_be_anything'
+    return resp
+
+@app.route('/edit')#, methods=['GET', 'POST'])
+def edit():
+
+#The following code segment can be used to check if the turker has accepted the task yet
+    if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        #Our worker hasn't accepted the HIT (task) yet
+        pass
+    else:
+        #Our worker accepted the task
+        pass
+
+    '''
+    We're creating a dict with which we'll render our template page.html
+    Note we are grabbing GET Parameters
+    In this case, I'm using someInfoToPass as a sample parameter to pass information
+    '''
+    render_data = {
+        "worker_id": request.args.get("workerId"),
+        "assignment_id": request.args.get("assignmentId"),
+        "amazon_host": AMAZON_HOST,
+        "hit_id": request.args.get("hitId"),
+        "some_info_to_pass": request.args.get("someInfoToPass")
+    }
+
+
+    resp = make_response(render_template("edit.html", name = render_data))
+
+    #This is particularly nasty gotcha.
+    #Without this header, your iFrame will not render in Amazon
+    resp.headers['x-frame-options'] = 'this_can_be_anything'
+    return resp
+
+@app.route('/rank')#, methods=['GET', 'POST'])
+def rank():
+
+#The following code segment can be used to check if the turker has accepted the task yet
+    if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        #Our worker hasn't accepted the HIT (task) yet
+        pass
+    else:
+        #Our worker accepted the task
+        pass
+
+    '''
+    We're creating a dict with which we'll render our template page.html
+    Note we are grabbing GET Parameters
+    In this case, I'm using someInfoToPass as a sample parameter to pass information
+    '''
+    render_data = {
+        "worker_id": request.args.get("workerId"),
+        "assignment_id": request.args.get("assignmentId"),
+        "amazon_host": AMAZON_HOST,
+        "hit_id": request.args.get("hitId"),
+        "some_info_to_pass": request.args.get("someInfoToPass")
+    }
+
+
+    resp = make_response(render_template("rank.html", name = render_data))
 
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
