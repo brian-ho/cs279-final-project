@@ -48,8 +48,7 @@ def find():
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
         "some_info_to_pass": request.args.get("someInfoToPass"),
-        "some_info_to_pass": request.args.get("someInfoToPass"),
-        "gmaps_url": "https://maps.googleapis.com/maps/api/js?key=Y"+GMAPS_KEY+"&callback=initialize"
+        "gmaps_url": "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
         }
 
     resp = make_response(render_template("find.html", name = render_data))
@@ -78,7 +77,6 @@ def verify():
         "assignment_id": request.args.get("assignmentId"),
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass")
         "some_info_to_pass": request.args.get("someInfoToPass"),
         "img1": "img1",
         "img2": "img2",
