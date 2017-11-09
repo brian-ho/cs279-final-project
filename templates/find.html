@@ -35,7 +35,7 @@
   var panorama;
   function initialize() {
     panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
-        { position: {lat: "{{name.trial.lat}}", lng: "{{name.trial.lng}}"},
+        { position: {lat: parseFloat("{{name.trial.lat}}"), lng: parseFloat("{{name.trial.lng}}")},
           pov: {heading: 165, pitch: 0},
           zoom: 1
         });
