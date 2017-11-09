@@ -60,7 +60,6 @@ def find():
         #Our worker accepted the task
         print "FIND — current generation is %i" % (generation)
         print "FIND — image %i, count %i" % (trial_ind, counts[trial_ind])
-        generation += 1
         counts[trial_ind] += 1
         pass
 
