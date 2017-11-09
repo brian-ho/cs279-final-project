@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import os
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
