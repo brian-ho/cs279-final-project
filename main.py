@@ -18,9 +18,21 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 
 # Setup trials
 trials = [{
-            "lat":42.375622,
-            "lng":-71.116121
-            }]
+            "lat":42.372835,
+            "lng": -71.116921
+            },
+            {
+            "lat":42.375858,
+            "lng":-71.114258},
+            {
+            "lat":42.378687,
+            "lng":-71.116619}
+            ]
+
+trial_ind = 0
+generation = 0
+counts = [0,0,0]
+
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -36,16 +48,20 @@ def main():
 
 @app.route('/find')#, methods=['GET', 'POST'])
 def find():
+
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
         pass
     else:
         #Our worker accepted the task
+        print "FIND — current generation is %i" % generation
+        print "FIND — image %i, count %i" % (trial_ind, counts[trial_ind[)
+        generation += 1
+        counts[trial_ind] += 1
         pass
 
     # SOME LOGIC TO GET THE CURRENT IMAGE
-    trial_ind = 0
 
     '''
     We're creating a dict with which we'll render our template page.html
