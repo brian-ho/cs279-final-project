@@ -1,20 +1,20 @@
-<!doctype html>
+
+  z<!doctype html>
 
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Verify Selections</title>
+  <title>Find the Thing!</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-
 </head>
 
 <body>
-
 	<div class="row">
-  			<h1>Verification</h1>
-  			<p>Please uncheck any images that do not seem to match the description.</p>
-    		<div class="col-sm-9">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-8">
+  			<h1>Find the Thing!</h1>
+  			<p>Based on the description below, please locate and click on the obejct.</p>
           <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
       			<p class="lead">This is where the description will be.</p>
             <div id="street-view" style="height:200px; width:600px"></div>
@@ -35,7 +35,7 @@
   var panorama;
   function initialize() {
     panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
-        { position: {lat: 37.869260, lng: -122.254811},
+        { position: {lat: "{{name.trial.lat}}", lng: "{{name.trial.lng}}"},
           pov: {heading: 165, pitch: 0},
           zoom: 1
         });

@@ -11,12 +11,16 @@ AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
-#End Configuration Variables
 
 GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
+#End Configuration Variables
 
-print(GMAPS_URL)
+# Setup trials
+trials = [{
+            "lat":42.375622,
+            "lng":-71.116121
+            }]
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -40,6 +44,9 @@ def find():
         #Our worker accepted the task
         pass
 
+    # SOME LOGIC TO GET THE CURRENT IMAGE
+    trial_ind = 0
+
     '''
     We're creating a dict with which we'll render our template page.html
     Note we are grabbing GET Parameters
@@ -50,7 +57,7 @@ def find():
         "assignment_id": request.args.get("assignmentId"),
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass"),
+        "trial": trials[trial_ind],
         "gmaps_url": GMAPS_URL
         }
 
