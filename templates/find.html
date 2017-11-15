@@ -1,5 +1,4 @@
-
-  z<!doctype html>
+<!doctype html>
 
 <html lang="en">
 <head>
@@ -15,13 +14,15 @@
   <div class="col-sm-7">
   			<h1>Find the Thing!</h1>
   			<p>Based on the description below, please locate and click on the obejct.</p>
-          <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
+          <!--<form id = "endForm" action="{{ name.amazon_host }}" method="POST">-->
+          <form id = "endForm" onclick=submitTwice(this.form) method="POST">
       			<p class="lead">This is where the description will be.</p>
             <div id="street-view" style="height:25%; width:100%"></div>
             <br>
-            <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
+            <textarea class="form-control" rows="10" name="description">This is where the starting description will be.</textarea>
             <br>
-            <input type="hidden" id="user-input" value="" name="user-input"/>
+            <input type="hidden" id="x" value="999" name="x"/>
+            <input type="hidden" id="y" value="999" name="y"/>
             <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
             <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
             <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
@@ -31,6 +32,14 @@
 	</div>
 
 </body>
+<script type="text/javascript">
+  function submitTwice(f){
+  f.action = '{{ name.amazon_host }}';
+  f.submit();
+  f.action = '/submit';
+  f.submit();
+  }
+</script>
 <script>
   var panorama;
   function initialize() {

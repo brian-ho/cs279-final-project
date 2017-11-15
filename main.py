@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+import psycopg2
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
-
 
 #Start Configuration Variables
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -18,6 +18,28 @@ DEBUG = True
 GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
 #End Configuration Variables
+
+
+# CONNECTING TO POSTGRES
+conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
+print "Connecting to database\n	-> %s" % (conn_string)
+# get a connection, if a connect cannot be made an exception will be raised here
+conn = psycopg2.connect(conn_string)
+'''
+urlparse.uses_netloc.append("postgres")
+url = urlparse.urlparse(os.environ["DATABASE_URL"])
+
+conn = psycopg2.connect(
+    database=url.path[1:],
+    user=url.username,
+    password=url.password,
+    host=url.hostname,
+    port=url.port
+)
+'''
+# conn.cursor will return a cursor object, you can use this cursor to perform queries
+cursor = conn.cursor()
+print "Connected!\n"
 
 # Setup trials
 trials = [{
@@ -49,7 +71,7 @@ app = Flask(__name__, static_url_path='')
 def main():
     return render_template('home.html')
 
-@app.route('/find')#, methods=['GET', 'POST'])
+@app.route('/find', methods=['GET', 'POST'])
 def find():
 
 #The following code segment can be used to check if the turker has accepted the task yet
@@ -60,7 +82,13 @@ def find():
         #Our worker accepted the task
         print "FIND — current generation is %i" % (generation)
         print "FIND — image %i, count %i" % (trial_ind, counts[trial_ind])
+
+        # Ask database for info
+
+
         counts[trial_ind] += 1
+
+
         pass
 
     # SOME LOGIC TO GET THE CURRENT IMAGE
@@ -171,6 +199,36 @@ def rank():
     }
 
     resp = make_response(render_template("rank.html", name = render_data))
+    #This is particularly nasty gotcha.
+    #Without this header, your iFrame will not render in Amazon
+    resp.headers['x-frame-options'] = 'this_can_be_anything'
+    return resp
+
+@app.route('/submit', methods=['GET', 'POST'])
+def submit():
+#The following code segment can be used to check if the turker has accepted the task yet
+    if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        #Our worker hasn't accepted the HIT (task) yet
+        pass
+    else:
+        #Our worker accepted the task
+        pass
+
+    print "SUBMITTED"
+    '''
+    We're creating a dict with which we'll render our template page.html
+    Note we are grabbing GET Parameters
+    In this case, I'm using someInfoToPass as a sample parameter to pass information
+    render_data = {
+        "worker_id": request.args.get("workerId"),
+        "assignment_id": request.args.get("assignmentId"),
+        "amazon_host": AMAZON_HOST,
+        "hit_id": request.args.get("hitId"),
+        "some_info_to_pass": request.args.get("someInfoToPass")
+    }
+    '''
+
+    resp = make_response(render_template("home.html"))
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
