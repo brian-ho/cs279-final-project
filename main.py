@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import os
 import psycopg2
 import urlparse
@@ -53,10 +52,6 @@ trials = [{
             "lng":-71.116619}
             ]
 
-trial_ind = 0
-generation = 0
-counts = [0,0,0]
-
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -66,6 +61,7 @@ else:
 
 app = Flask(__name__, static_url_path='')
 
+# ROUTE FOR INTERNAL NAVIGATION
 @app.route('/')
 def main():
     return render_template('home.html')
@@ -80,16 +76,10 @@ def find():
         pass
     else:
         #Our worker accepted the task
-        print "FIND — current generation is %i" % (generation)
-        print "FIND — image %i, count %i" % (trial_ind, counts[trial_ind])
-
         # Ask database for info
-
-
-        counts[trial_ind] += 1
-
-
         pass
+
+    print "FINDING"
 
     # SOME LOGIC TO GET THE CURRENT IMAGE
 
@@ -103,7 +93,7 @@ def find():
         "assignment_id": request.args.get("assignmentId"),
         "amazon_host": AMAZON_HOST,
         "hit_id": request.args.get("hitId"),
-        "trial": trials[trial_ind],
+        "trial": trials[0],
         "gmaps_url": GMAPS_URL
         }
 

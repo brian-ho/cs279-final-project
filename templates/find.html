@@ -15,7 +15,7 @@
   			<h1>Find the Thing!</h1>
   			<p>Based on the description below, please locate and click on the obejct.</p>
           <!--<form id = "endForm" action="{{ name.amazon_host }}" method="POST">-->
-          <form id = "endForm" onclick=submitTwice(this.form) method="POST">
+          <form id = "endForm" onclick=submitTwice() method="POST">
       			<p class="lead">This is where the description will be.</p>
             <div id="street-view" style="height:25%; width:100%"></div>
             <br>
@@ -30,13 +30,22 @@
           </form>
   		</div>
 	</div>
+  <div style="visibility:hidden">
+  <iframe name="ifr1" width="20" height="20"></iframe>
+  <iframe name="ifr2" width="20" height="20"></iframe>
+  </div>
 
 </body>
 <script type="text/javascript">
-  function submitTwice(f){
-    f.action = 'https://cs279-final-project.herokuapp.com/submit';
-    f.submit();
+  function submitTwice(){
+    var f = document.getElementById("endForm");
+    console.log('SUBMIT LOCAL');
+    f.action = '/submit';
+    //f.target = 'ifr1';
+    console.log('SUBMIT AWS');
     f.action = '{{ name.amazon_host }}';
+    //f.target = 'ifr2';
+    f.submit();
     f.submit();
   }
 </script>
