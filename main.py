@@ -9,16 +9,14 @@ from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
 
-#Start Configuration Variables
+# CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-DEV_ENVIROMENT_BOOLEAN = True
-DEBUG = True
-
 GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
-#End Configuration Variables
 
+DEV_ENVIROMENT_BOOLEAN = True
+DEBUG = True
 
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
@@ -59,7 +57,7 @@ generation = 0
 counts = [0,0,0]
 
 
-#This allows us to specify whether we are pushing to the sandbox or live site.
+# This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
     AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
 else:
@@ -71,10 +69,11 @@ app = Flask(__name__, static_url_path='')
 def main():
     return render_template('home.html')
 
+# ROUTE FOR FIND TASK
 @app.route('/find', methods=['GET', 'POST'])
 def find():
 
-#The following code segment can be used to check if the turker has accepted the task yet
+# The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
         pass
@@ -113,6 +112,7 @@ def find():
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
+# ROUTE FOR VERIFY TASK
 @app.route('/verify')#, methods=['GET', 'POST'])
 def verify():
 #The following code segment can be used to check if the turker has accepted the task yet
@@ -146,6 +146,7 @@ def verify():
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
+# ROUTE FOR EDIT TASK
 @app.route('/edit')#, methods=['GET', 'POST'])
 def edit():
 #The following code segment can be used to check if the turker has accepted the task yet
@@ -175,6 +176,7 @@ def edit():
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
+# ROUTE FOR RANK TASK
 @app.route('/rank')#, methods=['GET', 'POST'])
 def rank():
 #The following code segment can be used to check if the turker has accepted the task yet
@@ -204,6 +206,7 @@ def rank():
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
+# ROUTE FOR SUBMISSION
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
 #The following code segment can be used to check if the turker has accepted the task yet
@@ -214,7 +217,8 @@ def submit():
         #Our worker accepted the task
         pass
 
-    print "SUBMITTED"
+    print "SUBMITTED
+
     '''
     We're creating a dict with which we'll render our template page.html
     Note we are grabbing GET Parameters
