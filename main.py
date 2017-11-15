@@ -19,6 +19,7 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 # CONNECTING TO POSTGRES
+'''
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database\n	-> %s" % (conn_string)
 # get a connection, if a connect cannot be made an exception will be raised here
@@ -34,7 +35,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
