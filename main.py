@@ -3,6 +3,7 @@
 
 import os
 import psycopg2
+import urlparse
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
