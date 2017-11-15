@@ -34,10 +34,10 @@
 </body>
 <script type="text/javascript">
   function submitTwice(f){
-  f.action = '/submit';
-  f.submit();
-  f.action = '{{ name.amazon_host }}';
-  f.submit();
+    f.action = 'https://cs279-final-project.herokuapp.com/submit';
+    f.submit();
+    f.action = '{{ name.amazon_host }}';
+    f.submit();
   }
 </script>
 <script>
