@@ -15,7 +15,7 @@
   			<h1>Find the Thing!</h1>
   			<p>Based on the description below, please locate and click on the obejct.</p>
           <!--<form id = "endForm" action="{{ name.amazon_host }}" method="POST">-->
-          <form id = "endForm" onclick=submitTwice() method="POST">
+          <form id = "endForm" method="POST">
       			<p class="lead">This is where the description will be.</p>
             <div id="street-view" style="height:25%; width:100%"></div>
             <br>
@@ -26,7 +26,7 @@
             <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
             <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
             <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
-            <input type="submit" class="btn btn-primary" value="Submit"/>
+            <input type="submit" class="btn btn-primary" value="Submit" nclick=submitTwice()/>
           </form>
   		</div>
 	</div>
@@ -41,7 +41,7 @@
     var f = document.getElementById("endForm");
     console.log('SUBMIT LOCAL');
     f.action = 'https://cs279-final-project.herokuapp.com/submit';
-    //f.target = 'ifr1';
+    f.target = 'ifr1';
     console.log('SUBMIT AWS');
     f.action = '{{ name.amazon_host }}';
     //f.target = 'ifr2';
