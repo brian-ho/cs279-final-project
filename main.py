@@ -217,7 +217,7 @@ def submit():
         #Our worker accepted the task
         pass
 
-    print "SUBMITTED
+    print "SUBMITTED"
 
     '''
     We're creating a dict with which we'll render our template page.html
