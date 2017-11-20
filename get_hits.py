@@ -8,8 +8,8 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 
 #Start Configuration Variables
-AWS_ACCESS_KEY_ID = "AKIAIRJSQWZHVQIIHXCQ"
-AWS_SECRET_ACCESS_KEY = "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"
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 #End Configuration Variables
