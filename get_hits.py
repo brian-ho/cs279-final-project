@@ -1,5 +1,4 @@
 import os
-import sys
 #import setup
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
@@ -8,13 +7,11 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 
 #Start Configuration Variables
-AWS_ACCESS_KEY_ID = "AKIAIRJSQWZHVQIIHXCQ"
-AWS_SECRET_ACCESS_KEY = "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"
+AWS_ACCESS_KEY_ID = XXX
+AWS_SECRET_ACCESS_KEY = XXX
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 #End Configuration Variables
-
-AWS_id = sys.argv[1]
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -26,8 +23,5 @@ connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
                              aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                              host=AMAZON_HOST)
 
-results = connection.get_assignments(AWS_id)
-assignment = results[0]
-# print results[0].WorkerId
-for answer in assignment.answers[0]:
-    print answer.qid, answer.fields[0]
+results = connection.get_assignments("3MJ28H2Y1E9P3WEC0KS8V4UACULO57")
+print results[0].answers[0][0].fields

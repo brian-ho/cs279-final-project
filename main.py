@@ -8,7 +8,6 @@ from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
-import datetime
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -20,8 +19,10 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 # CONNECTING TO POSTGRES
+'''
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database\n	-> %s" % (conn_string)
+# get a connection, if a connect cannot be made an exception will be raised here
 conn = psycopg2.connect(conn_string)
 '''
 urlparse.uses_netloc.append("postgres")
@@ -34,8 +35,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
-
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -71,59 +70,38 @@ def main():
 @app.route('/find', methods=['GET', 'POST'])
 def find():
 
-    # The following code segment can be used to check if the turker has accepted the task yet
+# The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
-        # Our worker hasn't accepted the HIT (task) yet
-        # TODO RENDER OUR PREVIEW TEMPLATE
+        #Our worker hasn't accepted the HIT (task) yet
         pass
     else:
-        # Our worker accepted the task
-        print "FINDING"
-        '''
-        We're creating a dict with which we'll render our template page.html
-        Note we are grabbing GET Parameters
-        '''
+        #Our worker accepted the task
+        # Ask database for info
+        pass
 
-        render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
-            "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "trial": trials[0],
-            "gmaps_url": GMAPS_URL
-            }
+    print "FINDING"
 
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "trial": trials[0],
-            "gmaps_url": GMAPS_URL
-            }
-        '''
+    # SOME LOGIC TO GET THE CURRENT IMAGE
 
-        # Log the HIT
-        query = "INSERT INTO tracking (hit_id, assignment_id, worker_id, task, status, time) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, 'find', 'started', %(time_)s);" # RETURNING id;"
+    '''
+    We're creating a dict with which we'll render our template page.html
+    Note we are grabbing GET Parameters
+    In this case, I'm using someInfoToPass as a sample parameter to pass information
+    '''
+    render_data = {
+        "worker_id": request.args.get("workerId"),
+        "assignment_id": request.args.get("assignmentId"),
+        "amazon_host": AMAZON_HOST,
+        "hit_id": request.args.get("hitId"),
+        "trial": trials[0],
+        "gmaps_url": GMAPS_URL
+        }
 
-        cursor.execute(query, {'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'), 'hitId_': render_data['hit_id'], 'assignmentId_': render_data['assignment_id'], 'workerId_':render_data['worker_id']})
-        conn.commit
-
-        #print cursor.fetchone()[0]
-
-
-        # Check status
-        #query = "SELECT name, type FROM streets WHERE id = %i" % (best_result["street"])
-        #cursor.execute(query)
-        #street = cursor.fetchone()
-
-        resp = make_response(render_template("find.html", name = render_data))
-
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
-        resp.headers['x-frame-options'] = 'this_can_be_anything'
-        return resp
+    resp = make_response(render_template("find.html", name = render_data))
+    #This is particularly nasty gotcha.
+    #Without this header, your iFrame will not render in Amazon
+    resp.headers['x-frame-options'] = 'this_can_be_anything'
+    return resp
 
 # ROUTE FOR VERIFY TASK
 @app.route('/verify')#, methods=['GET', 'POST'])
