@@ -14,10 +14,10 @@
   <div class="col-sm-7">
   			<h1>Find the Thing!</h1>
   			<p>Based on the description below, please locate and click on the obejct.</p>
-          <!--<form id = "endForm" action="{{ name.amazon_host }}" method="POST">-->
-          <form id = "endForm" method="POST">
+          <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
+          <!--<form id = "endForm" method="POST">-->
       			<p class="lead">This is where the description will be.</p>
-            <div id="street-view" style="height:25%; width:100%"></div>
+            <div id="street-view" style="height:40%; width:100%"></div>
             <br>
             <textarea class="form-control" rows="10" name="description">This is where the starting description will be.</textarea>
             <br>
@@ -31,11 +31,10 @@
   		</div>
 	</div>
   <div style="visibility:hidden">
-  <iframe name="ifr1" width="20" height="20"></iframe>
-  <iframe name="ifr2" width="20" height="20"></iframe>
   </div>
 
 </body>
+<!--
 <script type="text/javascript">
   function submitTwice(){
     var f = document.getElementById("endForm");
@@ -49,7 +48,9 @@
     f.submit();
   }
 </script>
+-->
 <script>
+  console.log("{{ name.gmaps_url}}");
   var panorama;
   function initialize() {
     panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
