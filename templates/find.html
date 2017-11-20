@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
 </head>
-
 <body>
 	<div class="row">
   <div class="col-sm-1"></div>
@@ -17,7 +16,7 @@
           <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
           <!--<form id = "endForm" method="POST">-->
       			<p class="lead">This is where the description will be.</p>
-            <div id="street-view" style="height:40%; width:100%"></div>
+            <div id="street-view" style="height:300px; width:100%;"></div>
             <br>
             <textarea class="form-control" rows="10" name="description">This is where the starting description will be.</textarea>
             <br>
@@ -30,37 +29,20 @@
           </form>
   		</div>
 	</div>
-  <div style="visibility:hidden">
-  </div>
-
 </body>
-<!--
-<script type="text/javascript">
-  function submitTwice(){
-    var f = document.getElementById("endForm");
-    console.log('SUBMIT LOCAL');
-    f.action = 'https://cs279-final-project.herokuapp.com/submit';
-    //f.target = 'ifr1';
-    console.log('SUBMIT AWS');
-    f.action = '{{ name.amazon_host }}';
-    //f.target = 'ifr2';
-    f.submit();
-    f.submit();
-  }
-</script>
--->
 <script>
-  console.log("{{ name.gmaps_url}}");
+  console.log("{{name.gmaps_url}}");
+  console.log(parseFloat("{{name.trial.lat}}"),parseFloat("{{name.trial.lng}}"));
   var panorama;
   function initialize() {
     panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
-        { position: {lat: parseFloat("{{name.trial.lat}}"), lng: parseFloat("{{name.trial.lng}}")},
-          pov: {heading: 165, pitch: 0},
-          zoom: 1
-        });
-  }
+      {
+        position: {lat: parseFloat("{{name.trial.lat}}"), lng: parseFloat("{{name.trial.lng}}")},
+        pov: {heading: 165, pitch: 0},
+        zoom: 1
+      });
+    }
 </script>
-<script async defer
-     src="{{ name.gmaps_url}}">
+<script async defer src="{{name.gmaps_url}}">
 </script>
 </html>

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
 import os
 import psycopg2
 import urlparse
@@ -21,7 +22,7 @@ DEBUG = True
 
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
-print "Connecting to database\n	-> %s" % (conn_string)
+print "Connecting to database ...\n	-> %s" % (conn_string)
 conn = psycopg2.connect(conn_string)
 '''
 urlparse.uses_netloc.append("postgres")
@@ -53,7 +54,6 @@ trials = [{
             "lng":-71.116619}
             ]
 
-
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
     AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
@@ -79,10 +79,6 @@ def find():
     else:
         # Our worker accepted the task
         print "FINDING"
-        '''
-        We're creating a dict with which we'll render our template page.html
-        Note we are grabbing GET Parameters
-        '''
 
         render_data = {
             "worker_id": "dummy_workerId2",
@@ -103,15 +99,7 @@ def find():
             "gmaps_url": GMAPS_URL
             }
         '''
-
-        # Log the HIT
-        query = "INSERT INTO tracking (hit_id, assignment_id, worker_id, task, status, time) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, 'find', 'started', %(time_)s);" # RETURNING id;"
-
-        cursor.execute(query, {'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'), 'hitId_': render_data['hit_id'], 'assignmentId_': render_data['assignment_id'], 'workerId_':render_data['worker_id']})
-        conn.commit
-
-        #print cursor.fetchone()[0]
-
+        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'find')
 
         # Check status
         #query = "SELECT name, type FROM streets WHERE id = %i" % (best_result["street"])
@@ -124,6 +112,7 @@ def find():
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
+    return
 
 # ROUTE FOR VERIFY TASK
 @app.route('/verify')#, methods=['GET', 'POST'])
@@ -134,30 +123,39 @@ def verify():
         pass
     else:
         #Our worker accepted the task
-        pass
+        print "VERIFYING"
 
-    '''
-    We're creating a dict with which we'll render our template page.html
-    Note we are grabbing GET Parameters
-    In this case, I'm using someInfoToPass as a sample parameter to pass information
-    '''
-    render_data = {
-        "worker_id": request.args.get("workerId"),
-        "assignment_id": request.args.get("assignmentId"),
-        "amazon_host": AMAZON_HOST,
-        "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass"),
-        "img1": "img1",
-        "img2": "img2",
-        "img3": "img3",
-        "img4": "img4"
-    }
+        render_data = {
+            "worker_id": "dummy_workerId2",
+            "assignment_id": "dummy_assignmentId2",
+            "amazon_host": AMAZON_HOST,
+            "hit_id": "dummy_hitId2",
+            "trial": trials[0],
+            "gmaps_url": GMAPS_URL
+            }
+        '''
+        render_data = {
+            "worker_id": request.args.get("workerId"),
+            "assignment_id": request.args.get("assignmentId"),
+            "amazon_host": AMAZON_HOST,
+            "hit_id": request.args.get("hitId"),
+            "some_info_to_pass": request.args.get("someInfoToPass"),
+            "img1": "img1",
+            "img2": "img2",
+            "img3": "img3",
+            "img4": "img4"
+        }
+        '''
 
-    resp = make_response(render_template("verify.html", name = render_data))
-    #This is particularly nasty gotcha.
-    #Without this header, your iFrame will not render in Amazon
-    resp.headers['x-frame-options'] = 'this_can_be_anything'
-    return resp
+        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'verify')
+
+        resp = make_response(render_template("verify.html", name = render_data))
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
+    return
+
 
 # ROUTE FOR EDIT TASK
 @app.route('/edit')#, methods=['GET', 'POST'])
@@ -168,26 +166,34 @@ def edit():
         pass
     else:
         #Our worker accepted the task
-        pass
+        print "EDITING"
+        render_data = {
+            "worker_id": "dummy_workerId2",
+            "assignment_id": "dummy_assignmentId2",
+            "amazon_host": AMAZON_HOST,
+            "hit_id": "dummy_hitId2",
+            "trial": trials[0],
+            "gmaps_url": GMAPS_URL
+            }
+        '''
+        render_data = {
+            "worker_id": request.args.get("workerId"),
+            "assignment_id": request.args.get("assignmentId"),
+            "amazon_host": AMAZON_HOST,
+            "hit_id": request.args.get("hitId"),
+            "some_info_to_pass": request.args.get("someInfoToPass")
+        }
+        '''
 
-    '''
-    We're creating a dict with which we'll render our template page.html
-    Note we are grabbing GET Parameters
-    In this case, I'm using someInfoToPass as a sample parameter to pass information
-    '''
-    render_data = {
-        "worker_id": request.args.get("workerId"),
-        "assignment_id": request.args.get("assignmentId"),
-        "amazon_host": AMAZON_HOST,
-        "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass")
-    }
+        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'edit')
 
-    resp = make_response(render_template("edit.html", name = render_data))
-    #This is particularly nasty gotcha.
-    #Without this header, your iFrame will not render in Amazon
-    resp.headers['x-frame-options'] = 'this_can_be_anything'
-    return resp
+        resp = make_response(render_template("edit.html", name = render_data))
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
+    return
+
 
 # ROUTE FOR RANK TASK
 @app.route('/rank')#, methods=['GET', 'POST'])
@@ -198,26 +204,33 @@ def rank():
         pass
     else:
         #Our worker accepted the task
-        pass
+        print "RANKING"
+        render_data = {
+            "worker_id": "dummy_workerId2",
+            "assignment_id": "dummy_assignmentId2",
+            "amazon_host": AMAZON_HOST,
+            "hit_id": "dummy_hitId2",
+            "trial": trials[0],
+            "gmaps_url": GMAPS_URL
+            }
+        '''
+        render_data = {
+            "worker_id": request.args.get("workerId"),
+            "assignment_id": request.args.get("assignmentId"),
+            "amazon_host": AMAZON_HOST,
+            "hit_id": request.args.get("hitId"),
+            "some_info_to_pass": request.args.get("someInfoToPass")
+        }
+        '''
 
-    '''
-    We're creating a dict with which we'll render our template page.html
-    Note we are grabbing GET Parameters
-    In this case, I'm using someInfoToPass as a sample parameter to pass information
-    '''
-    render_data = {
-        "worker_id": request.args.get("workerId"),
-        "assignment_id": request.args.get("assignmentId"),
-        "amazon_host": AMAZON_HOST,
-        "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass")
-    }
+        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'rank')
 
-    resp = make_response(render_template("rank.html", name = render_data))
-    #This is particularly nasty gotcha.
-    #Without this header, your iFrame will not render in Amazon
-    resp.headers['x-frame-options'] = 'this_can_be_anything'
-    return resp
+        resp = make_response(render_template("rank.html", name = render_data))
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
+    return
 
 # ROUTE FOR SUBMISSION
 @app.route('/submit', methods=['GET', 'POST'])
@@ -232,25 +245,20 @@ def submit():
 
     print "SUBMITTED"
 
-    '''
-    We're creating a dict with which we'll render our template page.html
-    Note we are grabbing GET Parameters
-    In this case, I'm using someInfoToPass as a sample parameter to pass information
-    render_data = {
-        "worker_id": request.args.get("workerId"),
-        "assignment_id": request.args.get("assignmentId"),
-        "amazon_host": AMAZON_HOST,
-        "hit_id": request.args.get("hitId"),
-        "some_info_to_pass": request.args.get("someInfoToPass")
-    }
-    '''
-
     resp = make_response(render_template("home.html"))
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
+# FUNCTION TO LOG EACH TASK
+def log_task_init(hitId_, assignmentId_, workerId_, task_):
+    # Log the HIT
+    query = "INSERT INTO tracking (hit_id, assignment_id, worker_id, task, status, time) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(task_)s, 'started', %(time_)s) RETURNING id;"
+    cursor.execute(query, {'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'), 'hitId_': hitId_, 'assignmentId_': assignmentId_, 'workerId_': workerId_, 'task_': task_})
+    conn.commit()
+    print cursor.fetchone()[0]
+    return
 
 if __name__ == "__main__":
     app.debug = DEBUG
