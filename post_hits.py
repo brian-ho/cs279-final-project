@@ -1,5 +1,5 @@
 import os
-import setup
+# import setup
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
@@ -7,8 +7,8 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 
 #Start Configuration Variables
-AWS_ACCESS_KEY_ID = "XXX"
-AWS_SECRET_ACCESS_KEY = "XXX"
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 #End Configuration Variables
@@ -31,23 +31,30 @@ frame_height = 800
 
 #Here, I create two sample qualifications
 qualifications = Qualifications()
-qualifications.add(PercentAssignmentsApprovedRequirement(comparator="GreaterThan", integer_value="90"))
-qualifications.add(NumberHitsApprovedRequirement(comparator="GreaterThan", integer_value="100"))
+# qualifications.add(PercentAssignmentsApprovedRequirement(comparator="GreaterThan", integer_value="90"))
+# qualifications.add(NumberHitsApprovedRequirement(comparator="GreaterThan", integer_value="100"))
 
 #This url will be the url of your application, with appropriate GET parameters
-url = "https://my-application.herokuapp.com/?someInfoToPass=INFORMATIONBEINGPASSED" 
+url = "https://cs279-final-project.herokuapp.com/find"
 questionform = ExternalQuestion(url, frame_height)
 create_hit_result = connection.create_hit(
-    title="Insert the title of your HIT",
+    title="Test Find",
     description="Insert your description here",
     keywords=["add", "some", "keywords"],
     #duration is in seconds
     duration = 60*60,
     #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-    max_assignments=15,
+    max_assignments=5,
     question=questionform,
     reward=Price(amount=amount),
      #Determines information returned by method in API, not super important
-    response_groups=('Minimal', 'HITDetail'), 
+    response_groups=('Minimal', 'HITDetail'),
     qualifications=qualifications,
     )
+
+# The response included several fields that will be helpful later
+hit_type_id = create_hit_result[0].HITTypeId
+hit_id = create_hit_result[0].HITId
+print "Your HIT has been created. You can see it at this link:"
+print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+print "Your HIT ID is: {}".format(hit_id)
