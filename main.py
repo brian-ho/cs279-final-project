@@ -10,6 +10,7 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 import datetime
 import math
+import json
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -20,6 +21,8 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
+
+'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -35,24 +38,10 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
-
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
 
-# Setup trials
-trials = [{
-            "lat":42.372835,
-            "lng": -71.116921
-            },
-            {
-            "lat":42.375858,
-            "lng":-71.114258},
-            {
-            "lat":42.378687,
-            "lng":-71.116619}
-            ]
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -67,6 +56,10 @@ app = Flask(__name__, static_url_path='')
 def main():
     return render_template('home.html')
 
+@app.route('/consent')
+def consent():
+    return render_template('consent.html')
+
 # ROUTE FOR FIND TASK
 @app.route('/find', methods=['GET', 'POST'])
 def find():
@@ -80,35 +73,24 @@ def find():
         # Our worker accepted the task
         print "FINDING"
 
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
+        conn.commit()
+        trial_info = cursor.fetchone()
+
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "assignment_id": "dummy_assignmentId2",
-            "worker_id": "dummy_workerId2",
-            "trial": 0,
-            "gen": 0,
-            "trial_info": trials[0],
-            "description": 'This is a test',
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id": "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+            "description": trial_info[2],
             "gmaps_url": GMAPS_URL
             }
 
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "trial": trials[0],
-            "description": 'This is a test',
-            "gmaps_url": GMAPS_URL
-            }
-        '''
         log_task_init(render_data, 'find')
-
-        # Check status
-        #query = "SELECT name, type FROM streets WHERE id = %i" % (best_result["street"])
-        #cursor.execute(query)
-        #street = cursor.fetchone()
 
         resp = make_response(render_template("find.html", name = render_data))
 
@@ -130,44 +112,35 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
-        cursor.execute(query, {'trial_':0, 'gen_':0})
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
         conn.commit()
+        trial_info = cursor.fetchone()
 
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
+        conn.commit()
         results = cursor.fetchmany(4)
+
         imgs = []
         for i, result in enumerate(results):
             imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
-        print imgs
-
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "assignment_id": "dummy_assignmentId2",
-            "worker_id": "dummy_workerId2",
-            "trial": 0,
-            "gen": 0,
-            "trial_info": trials[0],
-            "description": 'This is a test',
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+            "description": trial_info[2],
             "img0": imgs[0],
             "img1": imgs[1],
             "img2": imgs[2],
-            "img3": imgs[3]
+            "img3": imgs[3],
+            "gmaps_key": GMAPS_KEY
             }
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "some_info_to_pass": request.args.get("someInfoToPass"),
-            "img1": "img1",
-            "img2": "img2",
-            "img3": "img3",
-            "img4": "img4"
-        }
-        '''
 
         log_task_init(render_data, 'verify')
 
@@ -187,27 +160,35 @@ def rank():
         pass
     else:
         #Our worker accepted the task
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
+        conn.commit()
+        trial_info = cursor.fetchone()
+
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
+        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
+        conn.commit()
+
+        results = cursor.fetchall()
+        descriptions = []
+        descriptions = [{'find_id':result[0],'text':result[1]} for result in results]
+        descriptions.append({'find_id':9999, 'text':trial_info[2]})
+
+
         print "RANKING"
         render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "trial": trials[0],
-            "gmaps_key": GMAPS_KEY
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+            "descriptions": descriptions,
+            "gmaps_url": GMAPS_URL
             }
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "some_info_to_pass": request.args.get("someInfoToPass")
-        }
-        '''
 
-        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'rank')
-
+        log_task_init(render_data, 'rank')
         resp = make_response(render_template("rank.html", name = render_data))
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
@@ -249,8 +230,18 @@ def submit():
         for i in range(4):
             if 'img%i' % i in request.form:
                 v.append(1)
+
+                query = "UPDATE find SET valid_count = valid_count + 1 WHERE find_id = %(find_id_)s;"
+                cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
+                conn.commit()
+
             else:
                 v.append(0)
+
+                query = "UPDATE find SET invalid_count = invalid_count + 1 WHERE find_id = %(find_id_)s;"
+                cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
+                conn.commit()
+
         print v
 
         query = "INSERT INTO verify (hit_id, assignment_id, worker_id, time, trial, gen, img0, img1, img2, img3, v0, v1, v2, v3) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(img0_)s, %(img1_)s, %(img2_)s, %(img3_)s, %(v0_)s, %(v1_)s, %(v2_)s, %(v3_)s);"
@@ -272,6 +263,36 @@ def submit():
             })
         conn.commit()
 
+    elif request.form['task'] == 'rank':
+        print "RANK TASK"
+
+        ranking = json.loads(request.form['order'])
+        if len(ranking) < 10:
+            for i in range(10-len(ranking)):
+                ranking.append(-9999)
+
+        print ranking
+
+        query = "INSERT INTO rank (hit_id, assignment_id, worker_id, time, trial, gen, rank0, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(r0_)s, %(r1_)s, %(r2_)s, %(r3_)s, %(r4_)s, %(r5_)s, %(r6_)s, %(r7_)s, %(r8_)s, %(r9_)s);"
+        cursor.execute(query, {
+            'hitId_': request.form['hitId'],
+            'assignmentId_': request.form['assignmentId'],
+            'workerId_': request.form['workerId'],
+            'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
+            'trial_': request.form['trial'],
+            'gen_': request.form['gen'],
+            'r0_': ranking[0],
+            'r1_': ranking[1],
+            'r2_': ranking[2],
+            'r3_': ranking[3],
+            'r4_': ranking[4],
+            'r5_': ranking[5],
+            'r6_': ranking[6],
+            'r7_': ranking[7],
+            'r8_': ranking[8],
+            'r9_': ranking[9],
+            })
+        conn.commit()
 
     resp = make_response(render_template("home.html"))
     resp.headers['x-frame-options'] = 'this_can_be_anything'
