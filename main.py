@@ -83,7 +83,10 @@ def find():
         # Our worker accepted the task
         print "FINDING"
 
-        trial = random.randint(0, 2)
+        if 'trial' in request.args:
+            trial = request.args['trial']
+        else:
+            trial = random.randint(0, 2)
 
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
@@ -145,7 +148,10 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        trial = random.randint(0, 2)
+        if 'trial' in request.args:
+            trial = request.args['trial']
+        else:
+            trial = random.randint(0, 2)
 
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
@@ -216,7 +222,11 @@ def rank():
 
     else:
 
-        trial = random.randint(0, 2)
+        if 'trial' in request.args:
+            trial = request.args['trial']
+        else:
+            trial = random.randint(0, 2)
+            
         #Our worker accepted the task
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})

@@ -33,7 +33,7 @@ qualifications = Qualifications()
 # qualifications.add(NumberHitsApprovedRequirement(comparator="GreaterThan", integer_value="100"))
 
 #This url will be the url of your application, with appropriate GET parameters
-url = "https://cs279-final-project.herokuapp.com/find"
+url = "https://cs279-final-project.herokuapp.com/find?trial=0"
 questionform = ExternalQuestion(url, frame_height)
 create_hit_result = connection.create_hit(
     title="CS279 Test",
