@@ -23,6 +23,7 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 
+'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -38,7 +39,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
+
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -69,7 +70,13 @@ def find():
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
-        pass
+        resp = make_response(render_template("consent.html", name = render_data))
+
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
+return resp
     else:
         # Our worker accepted the task
         print "FINDING"
@@ -110,7 +117,12 @@ def verify():
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
-        pass
+        resp = make_response(render_template("consent.html", name = render_data))
+
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
     else:
         #Our worker accepted the task
         print "VERIFYING"
@@ -162,7 +174,12 @@ def rank():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
-        pass
+        resp = make_response(render_template("consent.html", name = render_data))
+
+        #This is particularly nasty gotcha.
+        #Without this header, your iFrame will not render in Amazon
+        resp.headers['x-frame-options'] = 'this_can_be_anything'
+        return resp
     else:
 
         trial = random.randint(0, 2)
