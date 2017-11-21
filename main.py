@@ -118,7 +118,7 @@ def find():
     return
 
 # ROUTE FOR VERIFY TASK
-@app.route('/verify')#, methods=['GET', 'POST'])
+@app.route('/verify', methods=['GET', 'POST'])
 def verify():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
@@ -129,7 +129,7 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        query = "SELECT pitch, heading FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s;"
+        query = "SELECT pitch, heading, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
@@ -234,6 +234,37 @@ def submit():
             'gen_': request.form['gen']
             })
         conn.commit()
+
+    elif request.form['task'] == 'verify':
+        print "VERIFY TASK"
+
+        v = []
+        for i in range(4):
+            if 'img%i' % i in request.form:
+                v.append(1)
+            else:
+                v.append(0)
+        print v
+
+        query = "INSERT INTO verify (hit_id, assignment_id, worker_id, time, trial, gen, img0, img1, img2, img3, v0, v1, v2, v3) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(img0_)s, %(img1_)s, %(img2_)s, %(img3_)s, %(v0_)s, %(v1_)s, %(v2_)s, %(v3_)s);"
+        cursor.execute(query, {
+            'hitId_': request.form['hitId'],
+            'assignmentId_': request.form['assignmentId'],
+            'workerId_': request.form['workerId'],
+            'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
+            'trial_': request.form['trial'],
+            'gen_': request.form['gen'],
+            'img0_': request.form['img0'],
+            'img1_': request.form['img1'],
+            'img2_': request.form['img2'],
+            'img3_': request.form['img3'],
+            'v0_' : v[0],
+            'v1_' : v[1],
+            'v2_' : v[2],
+            'v3_' : v[3]
+            })
+        conn.commit()
+
 
     resp = make_response(render_template("home.html"))
     resp.headers['x-frame-options'] = 'this_can_be_anything'
