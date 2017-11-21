@@ -25,7 +25,7 @@
   <div class="col-sm-1"></div>
   <div class="col-sm-7">
   			<h1>Find the Thing!</h1>
-  			<p>Based on the description below, please locate and click on the obejct.</p>
+  			<p>Based on the description below, please locate the object</p>
           <form id = "HIT" method="POST" >
       			<p class="lead">{{ name.description }}</p>
             <svg id="overlay">
@@ -40,8 +40,9 @@
               <circle cx=50% cy=50% r=75 stroke-width=1 stroke="white" fill="none" />
             </svg>
             <div id="street-view"></div>
+            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Submit" onclick="submitForm()" />
             <br>
-            <textarea class="form-control" rows="10" name="updated">{{ name.description }}</textarea>
+            <textarea id="description" class="form-control" rows="10" disabled="true" name="updated">{{ name.description }}</textarea>
             <br>
             <input type="hidden" id="heading" name="heading"/>
             <input type="hidden" id="pitch" name="pitch"/>
@@ -52,11 +53,23 @@
             <input type="hidden" id="task" value="find" name="task"/>
             <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
             <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
-            <input type="submit" class="btn btn-primary" value="Submit" onclick="submitForm()" />
+            <input type="hidden" id="findtime" name="findtime"/>
+            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Click here once you've found the object" onclick="completeFind()" />
           </form>
   		</div>
 	</div>
 </body>
+<script>
+    // COMPLETE FINDING
+    // Ends timer, disables GSV, enables the edit form field and submit button
+    function completeFind (){
+    	var findTime = Date.now() - startTime;
+    	document.getElementById("findtime").value = findTime;
+    	document.getElementById("overlay").pointer-events = none;
+    	document.getElementById("description").disabled = false;
+    	document.getElementById("submit").disabled = false;
+    }
+</script>
 <script>
     // SUBMIT SCRIPT
     // Sends data back to server via XHR
@@ -106,6 +119,8 @@
           panorama.setPosition({lat: parseFloat("{{name.trial_info.lat}}"), lng: parseFloat("{{name.trial_info.lng}}")});
         }, 500);
       })
+      // Start the timer
+      var startTime = Date.now();
      }
 </script>
 <script async defer src="{{name.gmaps_url}}"></script>
