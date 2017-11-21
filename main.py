@@ -129,11 +129,14 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        query = "SELECT pitch, heading, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
         imgs = cursor.fetchmany(4)
+        for img in imgs:
+            imgs[2] = zoom_to_FOV(img[2])
+
         print imgs
 
         render_data = {
@@ -220,7 +223,7 @@ def submit():
     if request.form['task'] == 'find':
         print "FIND TASK"
 
-        query = "INSERT INTO find (hit_id, assignment_id, worker_id, original, updated, time, pitch, heading, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(original_)s, %(updated_)s, %(time_)s, %(pitch_)s, %(heading_)s, %(trial_)s, %(gen_)s);"
+        query = "INSERT INTO find (hit_id, assignment_id, worker_id, original, updated, time, pitch, heading, zoom, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(original_)s, %(updated_)s, %(time_)s, %(pitch_)s, %(heading_)s, %(zoom_)s, %(trial_)s, %(gen_)s);"
         cursor.execute(query, {
             'hitId_': request.form['hitId'],
             'assignmentId_': request.form['assignmentId'],
@@ -230,6 +233,7 @@ def submit():
             'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
             'pitch_': request.form['pitch'],
             'heading_': request.form['heading'],
+            'zoom_': request.form['zoom'],
             'trial_': request.form['trial'],
             'gen_': request.form['gen']
             })
@@ -292,6 +296,9 @@ def log_task_init(render_data, task_):
     conn.commit()
     print "TRACKING ID", cursor.fetchone()[0]
     return
+
+def zoom_to_FOV(zoom):
+    return Math.atan(Math.pow(2, 1 - zoom)) * 360 / Math.PI
 
 if __name__ == "__main__":
     # app.debug = DEBUG

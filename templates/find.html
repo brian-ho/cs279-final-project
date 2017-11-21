@@ -45,6 +45,7 @@
             <br>
             <input type="hidden" id="heading" name="heading"/>
             <input type="hidden" id="pitch" name="pitch"/>
+            <input type="hidden" id="zoom" name="zoom"/>
             <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
             <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
             <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
@@ -90,15 +91,17 @@
         addressControl:  false
       });
 
-      console.log(panorama.zoom);
+      panorama.addListener('zoom_changed', function() {
+          var zoomCell = document.getElementById('zoom');
+          zoomCell.value = panorama.getZoom() + '';
+        });
+
       // Listener to keep form fields updated with pitch and heading
       panorama.addListener('pov_changed', function() {
           var headingCell = document.getElementById('heading');
           var pitchCell = document.getElementById('pitch');
-          var zoomCell = document.getElementById('zoom');
           headingCell.value = panorama.getPov().heading + '';
           pitchCell.value = panorama.getPov().pitch + '';
-          pitchCell.value = panorama.getPov().zoom + '';
       });
       // Listener to keep people from wandering off
       panorama.addListener('position_changed', function() {
