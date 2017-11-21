@@ -89,20 +89,34 @@ def find():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        render_data = {
-            "amazon_host": AMAZON_HOST,
-            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "hit_id": request.args.get("hitId"),
-            "assignment_id" : request.args.get("assignmentId"),
-            "worker_id": request.args.get("workerId"),
-            "trial": trial_info[3],
-            "gen": trial_info[4],
-            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-            "description": trial_info[2],
-            "gmaps_url": GMAPS_URL
-            }
+        if "hitId" in request.args:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+                # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+                # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+                "hit_id": request.args.get("hitId"),
+                "assignment_id" : request.args.get("assignmentId"),
+                "worker_id": request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "description": trial_info[2],
+                "gmaps_url": GMAPS_URL
+                }
+        else:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+                "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+                "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "description": trial_info[2],
+                "gmaps_url": GMAPS_URL
+                }
+
 
         log_task_init(render_data, 'find')
 
@@ -149,24 +163,39 @@ def verify():
         for i, result in enumerate(results):
             imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
-        render_data = {
-            "amazon_host": AMAZON_HOST,
-            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "hit_id": request.args.get("hitId"),
-            "assignment_id" : request.args.get("assignmentId"),
-            "worker_id": request.args.get("workerId"),
-            "trial": trial_info[3],
-            "gen": trial_info[4],
-            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-            "description": trial_info[2],
-            "img0": imgs[0],
-            "img1": imgs[1],
-            "img2": imgs[2],
-            "img3": imgs[3],
-            "gmaps_key": GMAPS_KEY
+        if "hitId" in request.args:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                "hit_id": request.args.get("hitId"),
+                "assignment_id" : request.args.get("assignmentId"),
+                "worker_id": request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "description": trial_info[2],
+                "img0": imgs[0],
+                "img1": imgs[1],
+                "img2": imgs[2],
+                "img3": imgs[3],
+                "gmaps_key": GMAPS_KEY
+                }
+        else:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                # "hit_id": request.args.get("hitId"),
+                # "assignment_id" : request.args.get("assignmentId"),
+                # "worker_id": request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "description": trial_info[2],
+                "img0": imgs[0],
+                "img1": imgs[1],
+                "img2": imgs[2],
+                "img3": imgs[3],
+                "gmaps_key": GMAPS_KEY
             }
+
 
         log_task_init(render_data, 'verify')
 
@@ -209,22 +238,33 @@ def rank():
         descriptions = [{'find_id':result[0],'text':result[1]} for result in results]
         descriptions.append({'find_id':9999, 'text':trial_info[2]})
 
-
         print "RANKING"
-        render_data = {
-            "amazon_host": AMAZON_HOST,
-            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "hit_id": request.args.get("hitId"),
-            "assignment_id" : request.args.get("assignmentId"),
-            "worker_id": request.args.get("workerId"),
-            "trial": trial_info[3],
-            "gen": trial_info[4],
-            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-            "descriptions": descriptions,
-            "gmaps_url": GMAPS_URL
-            }
+
+        if "hitId" in request.args:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                "hit_id": request.args.get("hitId"),
+                "assignment_id" : request.args.get("assignmentId"),
+                "worker_id": request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "descriptions": descriptions,
+                "gmaps_url": GMAPS_URL
+                }
+        else:
+            render_data = {
+                "amazon_host": AMAZON_HOST,
+                "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+                "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+                "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+                "trial": trial_info[3],
+                "gen": trial_info[4],
+                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                "descriptions": descriptions,
+                "gmaps_url": GMAPS_URL
+                }
+
 
         log_task_init(render_data, 'rank')
         resp = make_response(render_template("rank.html", name = render_data))
