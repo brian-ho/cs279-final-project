@@ -73,8 +73,7 @@ def find():
         print "CONSENT"
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
-        resp = make_response(render_template("consent.html", name = render_data))
-
+        resp = make_response(render_template("consent.html"))
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
