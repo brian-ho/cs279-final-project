@@ -42,10 +42,15 @@
             <div id="street-view"></div>
             <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
-            <textarea id="description" class="form-control" rows="10" disabled="true" name="updated">{{ name.description }}</textarea>
+            <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
+            <br>
+            <br>
+            <textarea id="description" class="form-control" rows="10" name="updated" disabled="true">{{ name.description }}</textarea>
             <br>
             <input type="hidden" id="heading" name="heading"/>
             <input type="hidden" id="pitch" name="pitch"/>
+            <input type="hidden" id="zoom" value=1 name="zoom"/>
+            <input type="hidden" id="findTime" name="findTime"/>
             <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
             <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
             <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
@@ -53,30 +58,28 @@
             <input type="hidden" id="task" value="find" name="task"/>
             <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
             <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
-            <input type="hidden" id="findtime" name="findtime"/>
-            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Submit" onclick="submitForm()" />
+            <input type="button" id="btnSubmit" class="btn btn-primary" value="Submit" disabled="true" onclick="submitForm()" />
           </form>
   		</div>
 	</div>
 </body>
 <script>
     // COMPLETE FINDING
+    // Start the timer
+    var startTime = Date.now();
+
     // Ends timer, disables GSV, enables the edit form field and submit button
     function completeFind (){
-      console.log("hullo");
-    	var findTime = Date.now() - startTime;
+    	var findTime = (Date.now() - startTime)/1000.0;
+      console.log(findTime);
+    	document.getElementById("findTime").value = findTime;
     	document.getElementById("completefind").disabled = true;
-    	document.getElementById("findtime").value = findTime;
     	document.getElementById("overlay").style.pointerEvents = 'none';
     	document.getElementById("description").disabled = false;
-    	document.getElementById("submit").disabled = false;
-
-     console.log(findTime);
+    	document.getElementById("btnSubmit").disabled = false;
    }
 </script>
 <script>
-    // Start the timer
-    var startTime = Date.now();
     // SUBMIT SCRIPT
     // Sends data back to server via XHR
     function submitForm (){
@@ -109,15 +112,17 @@
         addressControl:  false
       });
 
-      console.log(panorama.zoom);
+      panorama.addListener('zoom_changed', function() {
+          var zoomCell = document.getElementById('zoom');
+          zoomCell.value = panorama.getZoom() + '';
+        });
+
       // Listener to keep form fields updated with pitch and heading
       panorama.addListener('pov_changed', function() {
           var headingCell = document.getElementById('heading');
           var pitchCell = document.getElementById('pitch');
-          var zoomCell = document.getElementById('zoom');
           headingCell.value = panorama.getPov().heading + '';
           pitchCell.value = panorama.getPov().pitch + '';
-          pitchCell.value = panorama.getPov().zoom + '';
       });
       // Listener to keep people from wandering off
       panorama.addListener('position_changed', function() {
