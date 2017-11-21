@@ -19,7 +19,6 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
-'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -35,6 +34,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+'''
 
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
@@ -236,13 +236,14 @@ def rank():
 def submit():
     print "SUBMITTED"
 
-    '''
+    for key,value in request.form.iterlists():
+        print key,value
+
     resp = make_response(render_template("home.html"))
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
-    '''
 
 # FUNCTION TO LOG EACH TASK
 def log_task_init(hitId_, assignmentId_, workerId_, task_):
@@ -254,5 +255,5 @@ def log_task_init(hitId_, assignmentId_, workerId_, task_):
     return
 
 if __name__ == "__main__":
-    app.debug = DEBUG
-    app.run()
+    # app.debug = DEBUG
+    app.run(threaded=True)
