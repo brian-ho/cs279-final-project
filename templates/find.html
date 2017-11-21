@@ -25,7 +25,7 @@
   <div class="col-sm-1"></div>
   <div class="col-sm-7">
   			<h1>Find the Thing!</h1>
-  			<p>Based on the description below, please locate and click on the obejct.</p>
+  			<p>Based on the description below, please locate the object</p>
           <form id = "HIT" method="POST" >
       			<p class="lead">{{ name.description }}</p>
             <svg id="overlay">
@@ -40,6 +40,7 @@
               <circle cx=50% cy=50% r=75 stroke-width=1 stroke="white" fill="none" />
             </svg>
             <div id="street-view"></div>
+            <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
             <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
