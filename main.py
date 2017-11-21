@@ -90,9 +90,12 @@ def find():
 
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            "assignment_id": "dummy_assignment_id", #request.args.get("assignmentId"),
-            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "hit_id": request.args.get("hitId"),
+            "assignment_id" : request.args.get("assignmentId"),
+            "worker_id": request.args.get("workerId"),
             "trial": trial_info[3],
             "gen": trial_info[4],
             "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
@@ -146,9 +149,12 @@ def verify():
 
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "hit_id": request.args.get("hitId"),
+            "assignment_id" : request.args.get("assignmentId"),
+            "worker_id": request.args.get("workerId"),
             "trial": trial_info[3],
             "gen": trial_info[4],
             "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
@@ -204,9 +210,12 @@ def rank():
         print "RANKING"
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "hit_id": request.args.get("hitId"),
+            "assignment_id" : request.args.get("assignmentId"),
+            "worker_id": request.args.get("workerId"),
             "trial": trial_info[3],
             "gen": trial_info[4],
             "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
