@@ -139,7 +139,7 @@ def verify():
             "img1": imgs[1],
             "img2": imgs[2],
             "img3": imgs[3],
-            "gmaps_key": GMAPS_KEY = os.environ['GMAPS_KEY']
+            "gmaps_key": GMAPS_KEY
             }
 
         log_task_init(render_data, 'verify')
