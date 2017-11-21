@@ -5,6 +5,10 @@ from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
+import sys
+
+task = sys.argv[1]
+trial = sys.argv[2]
 
 #Start Configuration Variables
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -24,7 +28,15 @@ connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
                              host=AMAZON_HOST)
 
 #5 cents per HIT
-amount = 0.05
+if task == 'find':
+    amount = 0.05
+elif task == 'verify':
+    amount = 0.05
+elif task == 'rank':
+    amount = 0.05
+else:
+    amount = 0.05
+
 #frame_height in pixels
 frame_height = 800
 #Here, I create two sample qualifications
@@ -33,14 +45,14 @@ qualifications = Qualifications()
 # qualifications.add(NumberHitsApprovedRequirement(comparator="GreaterThan", integer_value="100"))
 
 #This url will be the url of your application, with appropriate GET parameters
-url = "https://cs279-final-project.herokuapp.com/find?trial=0"
+url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % (task, trial)
 questionform = ExternalQuestion(url, frame_height)
 create_hit_result = connection.create_hit(
-    title="CS279 Test",
-    description="Insert your description here",
-    keywords=["add", "some", "keywords"],
+    title="Help locate things in Google Street View — one question only!",
+    description="Participate in a short study to find things in Google Street View",
+    keywords=["find", "locate", "quick"],
     #duration is in seconds
-    duration = 60*60,
+    duration = 60*5,
     #max_assignments will set the amount of independent copies of the task (turkers can only see one)
     max_assignments=5,
     question=questionform,
