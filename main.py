@@ -21,6 +21,7 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
+
 '''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
@@ -37,7 +38,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -138,7 +138,8 @@ def verify():
             "img0": imgs[0],
             "img1": imgs[1],
             "img2": imgs[2],
-            "img3": imgs[3]
+            "img3": imgs[3],
+            "gmaps_key": GMAPS_KEY = os.environ['GMAPS_KEY']
             }
 
         log_task_init(render_data, 'verify')
