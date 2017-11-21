@@ -225,7 +225,7 @@ def submit():
     if request.form['task'] == 'find':
         print "FIND TASK"
 
-        query = "INSERT INTO find (hit_id, assignment_id, worker_id, original, updated, time, pitch, heading, zoom, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(original_)s, %(updated_)s, %(time_)s, %(pitch_)s, %(heading_)s, %(zoom_)s, %(trial_)s, %(gen_)s);"
+        query = "INSERT INTO find (hit_id, assignment_id, worker_id, original, updated, time, pitch, heading, zoom, find_time, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(original_)s, %(updated_)s, %(time_)s, %(pitch_)s, %(heading_)s, %(zoom_)s, %(findTime_)s, %(trial_)s, %(gen_)s);"
         cursor.execute(query, {
             'hitId_': request.form['hitId'],
             'assignmentId_': request.form['assignmentId'],
@@ -236,6 +236,7 @@ def submit():
             'pitch_': request.form['pitch'],
             'heading_': request.form['heading'],
             'zoom_': request.form['zoom'],
+            'findTime_': request.form['findTime'],
             'trial_': request.form['trial'],
             'gen_': request.form['gen']
             })

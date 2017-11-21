@@ -53,7 +53,7 @@
           <input type="hidden" id="find_id2" value="{{ name.img2[3] }}" name="find_id2"/>
           <input type="hidden" id="find_id3" value="{{ name.img3[3] }}" name="find_id3"/>
           <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
-          <input type="submit" class="btn btn-primary" value="Submit" onclick="submitForm()" />
+          <input type="button" class="btn btn-primary" value="Submit" onclick="submitForm()" />
         </form>
   		</div>
 	</div>
@@ -63,7 +63,6 @@
     // SUBMIT SCRIPT
     // Sends data back to server via XHR
     function submitForm (){
-      console.log("SUBMITTING");
       var form = document.querySelector("#HIT");
       var d = new FormData(form);
       // New HttpRequest instance
