@@ -40,7 +40,7 @@
               <circle cx=50% cy=50% r=75 stroke-width=1 stroke="white" fill="none" />
             </svg>
             <div id="street-view"></div>
-            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Submit" onclick="submitForm()" />
+            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
             <textarea id="description" class="form-control" rows="10" disabled="true" name="updated">{{ name.description }}</textarea>
             <br>
@@ -54,7 +54,7 @@
             <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
             <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
             <input type="hidden" id="findtime" name="findtime"/>
-            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Click here once you've found the object" onclick="completeFind()" />
+            <input type="submit" id="submit" class="btn btn-primary" disabled="true" value="Submit" onclick="submitForm()" />
           </form>
   		</div>
 	</div>
