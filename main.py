@@ -134,9 +134,10 @@ def verify():
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
-        imgs = cursor.fetchmany(4)
-        for img in imgs:
-            imgs[2] = zoom_to_FOV(img[2])
+        results = cursor.fetchmany(4)
+        imgs = []
+        for i, result in enumerate(results):
+            imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
         print imgs
 
@@ -298,8 +299,10 @@ def log_task_init(render_data, task_):
     print "TRACKING ID", cursor.fetchone()[0]
     return
 
+# HELPER FUNCTION TO CONVER GSV ZOOM TO FOV
 def zoom_to_FOV(zoom):
-    return math.atan(2**(1 - zoom)) * 360 / math.pi
+    # Note that we increase zoom by 1
+    return math.atan(2**(1 - (zoom+1))) * 360 / math.pi
 
 if __name__ == "__main__":
     # app.debug = DEBUG
