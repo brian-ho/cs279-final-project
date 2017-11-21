@@ -67,6 +67,10 @@ app = Flask(__name__, static_url_path='')
 def main():
     return render_template('home.html')
 
+@app.route('/consent')
+def consent():
+    return render_template('consent.html')
+
 # ROUTE FOR FIND TASK
 @app.route('/find', methods=['GET', 'POST'])
 def find():
@@ -159,12 +163,16 @@ def rank():
         pass
     else:
         #Our worker accepted the task
-        query = "SELECT original, updated FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        query = "SELECT find_id, original, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s;"
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
-        results = cursor.fetchmany(4)
-        imgs = []
+        results = cursor.fetchall()
+        descriptions = []
+        descriptions = [{'find_id':result[0],'text':result[2]} for result in results]
+        descriptions.append({'find_id':'original', 'text':results[0][1]})
+
+        print descriptions
 
         print "RANKING"
         render_data = {
@@ -175,14 +183,11 @@ def rank():
             "trial": 0,
             "gen": 0,
             "trial_info": trials[0],
-            "description": 'This is a test',
-            "img0": imgs[0],
-            "img1": imgs[1],
-            "img2": imgs[2],
-            "img3": imgs[3]
+            "descriptions": descriptions,
+            "gmaps_url": GMAPS_URL
             }
 
-        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'rank')
+        log_task_init(render_data, 'rank')
 
         resp = make_response(render_template("rank.html", name = render_data))
         #This is particularly nasty gotcha.

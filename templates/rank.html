@@ -25,36 +25,39 @@
       position: absolute;
       margin-left: -1.3em;
     }
+    #street-view {
+      height: 300px;
+      width: 100%;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  <script>
-  $( function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
-  } );
-  </script>
 </head>
 <body>
     <div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-8">
+    <h1>Rank Descriptions</h1>
+    <p>Please drag and drop the desciptions below to sort them in order of helpfulness in finding the target object. All of the descriptions describe how to find the object in the Google Street View below.</p>
         <form id = "HIT" method="POST">
-        <h1>Rank Descriptions</h1>
-        <p>Please drag and drop the desciptions below to sort them in order of helpfulness in finding the target object. All of the descriptions describe how to find the object in the Google Street View below.</p>
-        <iframe src="//www.google.com/maps/embed/v1/streetview?pano=4U-oRQCNsC6u7r8gp02sLA
-            &heading=5
-            &fov=75
-            &key=AIzaSyAlKScjGDYA1wq146zd8nH4vGD6rgj18hE">
-        </iframe>
+        <div id="street-view"></div>
+        <br>
 
-<ul id="sortable">
+  <ul id="sortable">
+
+    {% for description in name.descriptions %}
+      <li class="ui-state-default" id={{description.find_id}}><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{description.text}}</li>
+    {% endfor %}
+
+
+<!--
   <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 1</li>
   <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 2</li>
   <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 3</li>
   <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 4</li>
-</ul>
-
+-->
+    </ul>
+        <input type="hidden" id="order" name="order"/>
         <input type="hidden" id="user-input" value="" name="user-input"/>
         <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
         <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
@@ -66,6 +69,22 @@
   </div>
 
 </body>
+<script>
+// SORT SCRIPT
+// Updates with new sort order
+$( function() {
+  var $sortableList = $("#sortable");
+  var sortEventHandler = function(event, ui)
+      {
+        document.getElementById("order").value = JSON.stringify($sortableList.sortable("toArray"));
+        console.log(document.getElementById("order").value);
+      };
+  $sortableList.sortable({
+      stop: sortEventHandler
+  });
+  $( "#sortable" ).disableSelection();
+});
+</script>
 <script>
     // SUBMIT SCRIPT
     // Sends data back to server via XHR
@@ -81,4 +100,30 @@
       form.submit();
     }
 </script>
+<script>
+  // SET UP GSV PANORAMA
+  // Initialize the container
+  function initialize() {
+    var panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
+      {
+        position: {lat: parseFloat("{{name.trial_info.lat}}"), lng: parseFloat("{{name.trial_info.lng}}")},
+        pov: {heading: 165, pitch: 0},
+        zoom: 1,
+        visible: true,
+        linksControl: false,
+        zoomControl: false,
+        fullscreenControl: false,
+        panControl: false,
+        enableCloseButton: false,
+        addressControl:  false
+      });
+      // Listener to keep people from wandering off
+      panorama.addListener('position_changed', function() {
+        setTimeout(function() {
+          panorama.setPosition({lat: parseFloat("{{name.trial_info.lat}}"), lng: parseFloat("{{name.trial_info.lng}}")});
+        }, 500);
+      })
+     }
+</script>
+<script async defer src="{{name.gmaps_url}}"></script>
 </html>
