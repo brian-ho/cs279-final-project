@@ -159,7 +159,7 @@ def rank():
         pass
     else:
         #Our worker accepted the task
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        query = "SELECT original, updated FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
