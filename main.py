@@ -42,18 +42,6 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 print "Connected!\n"
 
-# Setup trials
-trials = [{
-            "lat":42.372835,
-            "lng": -71.116921
-            },
-            {
-            "lat":42.375858,
-            "lng":-71.114258},
-            {
-            "lat":42.378687,
-            "lng":-71.116619}
-            ]
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -85,15 +73,20 @@ def find():
         # Our worker accepted the task
         print "FINDING"
 
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
+        conn.commit()
+        trial_info = cursor.fetchone()
+
         render_data = {
             "amazon_host": AMAZON_HOST,
             "hit_id": "dummy_hitId2", #request.args.get("hitId"),
             "assignment_id": "dummy_assignment_id", #request.args.get("assignmentId"),
             "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "trial": 0,
-            "gen": 0,
-            "trial_info": trials[0],
-            "description": 'This is a test',
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+            "description": trial_info[2],
             "gmaps_url": GMAPS_URL
             }
 
@@ -119,27 +112,29 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
-        cursor.execute(query, {'trial_':0, 'gen_':0})
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
         conn.commit()
+        trial_info = cursor.fetchone()
 
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
+        conn.commit()
         results = cursor.fetchmany(4)
-        imgs = []
 
+        imgs = []
         for i, result in enumerate(results):
             imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
-
-        print imgs
 
         render_data = {
             "amazon_host": AMAZON_HOST,
             "hit_id": "dummy_hitId2", #request.args.get("hitId"),
             "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
             "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "trial": 0,
-            "gen": 0,
-            "trial_info": trials[0],
-            "description": 'This is a test',
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+            "description": trial_info[2],
             "img0": imgs[0],
             "img1": imgs[1],
             "img2": imgs[2],
@@ -164,16 +159,20 @@ def rank():
         pass
     else:
         #Our worker accepted the task
-        query = "SELECT find_id, original, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
-        cursor.execute(query, {'trial_':0, 'gen_':0})
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query)
+        conn.commit()
+        trial_info = cursor.fetchone()
+
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
+        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
         conn.commit()
 
         results = cursor.fetchall()
         descriptions = []
-        descriptions = [{'find_id':result[0],'text':result[2]} for result in results]
-        descriptions.append({'find_id':9999, 'text':results[0][1]})
+        descriptions = [{'find_id':result[0],'text':result[1]} for result in results]
+        descriptions.append({'find_id':9999, 'text':trial_info[2]})
 
-        print descriptions
 
         print "RANKING"
         render_data = {
@@ -181,9 +180,9 @@ def rank():
             "hit_id": "dummy_hitId2", #request.args.get("hitId"),
             "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
             "worker_id": "dummy_workerId2", #request.args.get("workerId"),
-            "trial": 0,
-            "gen": 0,
-            "trial_info": trials[0],
+            "trial": trial_info[3],
+            "gen": trial_info[4],
+            "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
             "descriptions": descriptions,
             "gmaps_url": GMAPS_URL
             }
