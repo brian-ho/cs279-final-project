@@ -3,12 +3,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<style>
-  #sortable { list-style-type: none; margin: 0; padding: 0; width: 40%;}
-  #sortable li { margin: 0 3px 3px 3px; padding: 0.4em; padding-left: 1.5em; font-size: 1.4em; height: 50px; background-color: #338DFF; outline-color: black; color: white;}
-  #sortable li span { position: absolute; margin-left: -1.3em; }
+    #sortable {
+       list-style-type: none;
+       margin: 0;
+       padding: 0;
+       width: 40%;
+    }
+    #sortable li {
+      margin: 0 3px 3px 3px;
+      padding: 0.4em;
+      padding-left: 1.5em;
+      font-size: 1.4em;
+      height: 50px;
+      background-color: #338DFF;
+      outline-color: black;
+      color: white;
+    }
+    #sortable li span {
+      position: absolute;
+      margin-left: -1.3em;
+    }
   </style>
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -18,18 +34,14 @@
     $( "#sortable" ).disableSelection();
   } );
   </script>
-
 </head>
-
 <body>
-
     <div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-8">
         <form id = "HIT" method="POST">
         <h1>Rank Descriptions</h1>
         <p>Please drag and drop the desciptions below to sort them in order of helpfulness in finding the target object. All of the descriptions describe how to find the object in the Google Street View below.</p>
-
         <iframe src="//www.google.com/maps/embed/v1/streetview?pano=4U-oRQCNsC6u7r8gp02sLA
             &heading=5
             &fov=75

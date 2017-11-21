@@ -82,9 +82,9 @@ def find():
 
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "assignment_id": "dummy_assignmentId2",
-            "worker_id": "dummy_workerId2",
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id": "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
             "trial": 0,
             "gen": 0,
             "trial_info": trials[0],
@@ -92,23 +92,7 @@ def find():
             "gmaps_url": GMAPS_URL
             }
 
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "trial": trials[0],
-            "description": 'This is a test',
-            "gmaps_url": GMAPS_URL
-            }
-        '''
         log_task_init(render_data, 'find')
-
-        # Check status
-        #query = "SELECT name, type FROM streets WHERE id = %i" % (best_result["street"])
-        #cursor.execute(query)
-        #street = cursor.fetchone()
 
         resp = make_response(render_template("find.html", name = render_data))
 
@@ -136,6 +120,7 @@ def verify():
 
         results = cursor.fetchmany(4)
         imgs = []
+
         for i, result in enumerate(results):
             imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
@@ -143,9 +128,9 @@ def verify():
 
         render_data = {
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "assignment_id": "dummy_assignmentId2",
-            "worker_id": "dummy_workerId2",
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
             "trial": 0,
             "gen": 0,
             "trial_info": trials[0],
@@ -155,19 +140,6 @@ def verify():
             "img2": imgs[2],
             "img3": imgs[3]
             }
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "some_info_to_pass": request.args.get("someInfoToPass"),
-            "img1": "img1",
-            "img2": "img2",
-            "img3": "img3",
-            "img4": "img4"
-        }
-        '''
 
         log_task_init(render_data, 'verify')
 
@@ -187,24 +159,28 @@ def rank():
         pass
     else:
         #Our worker accepted the task
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC;"
+        cursor.execute(query, {'trial_':0, 'gen_':0})
+        conn.commit()
+
+        results = cursor.fetchmany(4)
+        imgs = []
+
         print "RANKING"
         render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
             "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "trial": trials[0],
-            "gmaps_key": GMAPS_KEY
+            "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+            "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+            "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+            "trial": 0,
+            "gen": 0,
+            "trial_info": trials[0],
+            "description": 'This is a test',
+            "img0": imgs[0],
+            "img1": imgs[1],
+            "img2": imgs[2],
+            "img3": imgs[3]
             }
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "some_info_to_pass": request.args.get("someInfoToPass")
-        }
-        '''
 
         log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'rank')
 
@@ -249,8 +225,18 @@ def submit():
         for i in range(4):
             if 'img%i' % i in request.form:
                 v.append(1)
+
+                query = "UPDATE find SET valid_count = valid_count + 1 WHERE find_id = %(find_id_)s;"
+                cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
+                conn.commit()
+
             else:
                 v.append(0)
+
+                query = "UPDATE find SET invalid_count = invalid_count + 1 WHERE find_id = %(find_id_)s;"
+                cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
+                conn.commit()
+
         print v
 
         query = "INSERT INTO verify (hit_id, assignment_id, worker_id, time, trial, gen, img0, img1, img2, img3, v0, v1, v2, v3) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(img0_)s, %(img1_)s, %(img2_)s, %(img3_)s, %(v0_)s, %(v1_)s, %(v2_)s, %(v3_)s);"
