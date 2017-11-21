@@ -40,6 +40,7 @@ conn = psycopg2.connect(
     port=url.port
 )
 
+
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -196,7 +197,7 @@ def verify():
 
         log_task_init(render_data, 'verify')
 
-        resp = make_response(render_template("verify.html"))
+        resp = make_response(render_template("verify.html", name = render_data))
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
