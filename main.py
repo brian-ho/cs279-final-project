@@ -92,9 +92,6 @@ def find():
         if "hitId" in request.args:
             render_data = {
                 "amazon_host": AMAZON_HOST,
-                # "hit_id": "dummy_hitId2", #request.args.get("hitId"),
-                # "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-                # "worker_id": "dummy_workerId2", #request.args.get("workerId"),
                 "hit_id": request.args.get("hitId"),
                 "assignment_id" : request.args.get("assignmentId"),
                 "worker_id": request.args.get("workerId"),
@@ -107,9 +104,9 @@ def find():
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
-                "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+                "hit_id": "dummy_hitId", #request.args.get("hitId"),
                 "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-                "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+                "worker_id": "dummy_workerId", #request.args.get("workerId"),
                 "trial": trial_info[3],
                 "gen": trial_info[4],
                 "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
@@ -182,9 +179,9 @@ def verify():
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
-                # "hit_id": request.args.get("hitId"),
-                # "assignment_id" : request.args.get("assignmentId"),
-                # "worker_id": request.args.get("workerId"),
+                "hit_id": "dummy_hitId", #request.args.get("hitId"),
+                "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
+                "worker_id": "dummy_workerId", #request.args.get("workerId"),
                 "trial": trial_info[3],
                 "gen": trial_info[4],
                 "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
@@ -255,9 +252,9 @@ def rank():
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
-                "hit_id": "dummy_hitId2", #request.args.get("hitId"),
+                "hit_id": "dummy_hitId", #request.args.get("hitId"),
                 "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-                "worker_id": "dummy_workerId2", #request.args.get("workerId"),
+                "worker_id": "dummy_workerId", #request.args.get("workerId"),
                 "trial": trial_info[3],
                 "gen": trial_info[4],
                 "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
