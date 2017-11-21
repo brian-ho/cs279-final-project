@@ -16,36 +16,16 @@
   			<p>Please uncheck any images that do not seem to match the description.</p>
             <form id="HIT" method="POST" >
 	            <p class="lead">{{name.description}}</p>
-        			<div class="checkbox">
-        			  <label>
-        			    <input type="checkbox" name="img0" value="{{name.img0[3]}}" checked>
-        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img0[0]}}&heading={{name.img0[1]}}&fov={{name.img0[2]}}&key={{name.gmaps_key}}" alt="Object 1" height="200" width="200">
-        			  </label>
-        			</div>
-        			<div class="checkbox">
-        			  <label>
-        			    <input type="checkbox" name="img1" value="{{name.img1[3]}}" checked>
-        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img1[0]}}&heading={{name.img1[1]}}&fov={{name.img1[2]}}&key={{name.gmaps_key}}" alt="Object 2" height="200" width="200">
-        			  </label>
-        			</div>
-        			<div class="checkbox">
-        			  <label>
-        			    <input type="checkbox" name="img2" value="{{name.img2[3]}}" checked>
-        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img2[0]}}&heading={{name.img2[1]}}&fov={{name.img2[2]}}&key={{name.gmaps_key}}" alt="Object 3" height="200" width="200">
-        			  </label>
-        			</div>
-        			<div class="checkbox">
-        			  <label>
-                  <input type="checkbox" name="img3" value="{{name.img3[3]}}" checked>
-      		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img3[0]}}&heading={{name.img3[1]}}&fov={{name.img3[2]}}&key={{name.gmaps_key}}" alt="Object 4" height="200" width="200">
-        			  </label>
-      		    </div>
-        <!--<textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>-->
+              {% for image in name.images %}
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="{{'img'~loop.index}}" value="{{image[3]}}" checked>
+                  <input type="hidden" id="{{'find_id'~loop.index}}" value="{{image[3]}}" name="{{'find_id'~loop.index}}"/>
+                  <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{image[0]}}&heading={{image[1]}}&fov={{image[2]}}&key={{name.gmaps_key}}" alt="Object 1" height="200" width="200">
+                </label>
+              </div>
+              {% endfor %}
           <br>
-          <input type="hidden" id="find_id0" value="{{ name.img0[3] }}" name="find_id0"/>
-          <input type="hidden" id="find_id1" value="{{ name.img1[3] }}" name="find_id1"/>
-          <input type="hidden" id="find_id2" value="{{ name.img2[3] }}" name="find_id2"/>
-          <input type="hidden" id="find_id3" value="{{ name.img3[3] }}" name="find_id3"/>
           <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
           <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
           <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
