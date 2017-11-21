@@ -9,6 +9,7 @@ from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
 import datetime
+import math
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -298,7 +299,7 @@ def log_task_init(render_data, task_):
     return
 
 def zoom_to_FOV(zoom):
-    return Math.atan(Math.pow(2, 1 - zoom)) * 360 / Math.PI
+    return math.atan(2**(1 - zoom)) * 360 / math.pi
 
 if __name__ == "__main__":
     # app.debug = DEBUG
