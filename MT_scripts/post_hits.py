@@ -25,10 +25,8 @@ connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
 
 #5 cents per HIT
 amount = 0.05
-
 #frame_height in pixels
 frame_height = 800
-
 #Here, I create two sample qualifications
 qualifications = Qualifications()
 # qualifications.add(PercentAssignmentsApprovedRequirement(comparator="GreaterThan", integer_value="90"))

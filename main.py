@@ -76,7 +76,7 @@ def find():
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
-return resp
+
     else:
         # Our worker accepted the task
         print "FINDING"
@@ -123,6 +123,7 @@ def verify():
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
+    
     else:
         #Our worker accepted the task
         print "VERIFYING"
