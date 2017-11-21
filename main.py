@@ -11,6 +11,7 @@ from boto.mturk.price import Price
 import datetime
 import math
 import json
+import random
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -22,7 +23,6 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 
-'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -38,6 +38,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+'''
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -73,8 +74,10 @@ def find():
         # Our worker accepted the task
         print "FINDING"
 
-        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
-        cursor.execute(query)
+        trial = random.randint(0, 2)
+
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query, {"trial_":trial})
         conn.commit()
         trial_info = cursor.fetchone()
 
@@ -112,8 +115,10 @@ def verify():
         #Our worker accepted the task
         print "VERIFYING"
 
-        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
-        cursor.execute(query)
+        trial = random.randint(0, 2)
+
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query, {"trial_":trial})
         conn.commit()
         trial_info = cursor.fetchone()
 
@@ -159,9 +164,11 @@ def rank():
         #Our worker hasn't accepted the HIT (task) yet
         pass
     else:
+
+        trial = random.randint(0, 2)
         #Our worker accepted the task
-        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = 0 ORDER BY gen DESC LIMIT 1;"
-        cursor.execute(query)
+        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
+        cursor.execute(query, {"trial_":trial})
         conn.commit()
         trial_info = cursor.fetchone()
 
