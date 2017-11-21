@@ -42,16 +42,16 @@
       		    </div>
         <!--<textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>-->
           <br>
+          <input type="hidden" id="find_id0" value="{{ name.img0[3] }}" name="find_id0"/>
+          <input type="hidden" id="find_id1" value="{{ name.img1[3] }}" name="find_id1"/>
+          <input type="hidden" id="find_id2" value="{{ name.img2[3] }}" name="find_id2"/>
+          <input type="hidden" id="find_id3" value="{{ name.img3[3] }}" name="find_id3"/>
+          <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
           <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
           <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
           <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
           <input type="hidden" id="task" value="verify" name="task"/>
           <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
-          <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
-          <input type="hidden" id="find_id0" value="{{ name.img0[3] }}" name="find_id0"/>
-          <input type="hidden" id="find_id1" value="{{ name.img1[3] }}" name="find_id1"/>
-          <input type="hidden" id="find_id2" value="{{ name.img2[3] }}" name="find_id2"/>
-          <input type="hidden" id="find_id3" value="{{ name.img3[3] }}" name="find_id3"/>
           <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
           <input type="button" class="btn btn-primary" value="Submit" onclick="submitForm()" />
         </form>

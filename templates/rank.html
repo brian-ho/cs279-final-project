@@ -42,48 +42,41 @@
         <form id = "HIT" method="POST">
         <div id="street-view"></div>
         <br>
-
-  <ul id="sortable">
-
-    {% for description in name.descriptions %}
-      <li class="ui-state-default" id={{description.find_id}}><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{description.text}}</li>
-    {% endfor %}
-
-
-<!--
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 1</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 2</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 3</li>
-  <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Description 4</li>
--->
-    </ul>
-        <input type="hidden" id="order" name="order"/>
-        <input type="hidden" id="user-input" value="" name="user-input"/>
+        <ul id="sortable">
+          {% for description in name.descriptions %}
+            <li class="ui-state-default" id={{description.find_id}}><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>{{description.text}}</li>
+          {% endfor %}
+        </ul>
+        <br>
         <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
         <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
         <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+        <input type="hidden" id="task" value="rank" name="task"/>
+        <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
+        <input type="hidden" id="order" name="order"/>
+        <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
         <input type="submit" class="btn btn-primary" value="Submit" onclick="submitForm()"/>
       </form>
-
       </div>
   </div>
 
 </body>
 <script>
-// SORT SCRIPT
-// Updates with new sort order
-$( function() {
-  var $sortableList = $("#sortable");
-  var sortEventHandler = function(event, ui)
-      {
-        document.getElementById("order").value = JSON.stringify($sortableList.sortable("toArray"));
-        console.log(document.getElementById("order").value);
-      };
-  $sortableList.sortable({
-      stop: sortEventHandler
-  });
-  $( "#sortable" ).disableSelection();
-});
+    // SORT SCRIPT
+    // Updates with new sort order
+    $( function() {
+      var $sortableList = $("#sortable");
+      var sortEventHandler = function(event, ui)
+          {
+            document.getElementById("order").value = JSON.stringify($sortableList.sortable("toArray"));
+            console.log(document.getElementById("order").value);
+          };
+      $sortableList.sortable({
+          stop: sortEventHandler
+      });
+      document.getElementById("order").value = JSON.stringify($sortableList.sortable("toArray"));
+      $( "#sortable" ).disableSelection();
+    });
 </script>
 <script>
     // SUBMIT SCRIPT
