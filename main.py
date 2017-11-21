@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
 import os
 import psycopg2
 import urlparse
@@ -20,6 +19,7 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
+'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -35,7 +35,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
 
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
@@ -235,21 +234,15 @@ def rank():
 # ROUTE FOR SUBMISSION
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
-#The following code segment can be used to check if the turker has accepted the task yet
-    if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
-        #Our worker hasn't accepted the HIT (task) yet
-        pass
-    else:
-        #Our worker accepted the task
-        pass
-
     print "SUBMITTED"
 
+    '''
     resp = make_response(render_template("home.html"))
     #This is particularly nasty gotcha.
     #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
+    '''
 
 # FUNCTION TO LOG EACH TASK
 def log_task_init(hitId_, assignmentId_, workerId_, task_):

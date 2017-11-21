@@ -13,35 +13,77 @@
   <div class="col-sm-7">
   			<h1>Find the Thing!</h1>
   			<p>Based on the description below, please locate and click on the obejct.</p>
-          <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
-          <!--<form id = "endForm" method="POST">-->
+          <form id = "HIT" method="POST" action="{{ name.amazon_host }}" >
       			<p class="lead">This is where the description will be.</p>
+            <svg id="overlay" style="position: absolute;height:300px; width:100%; z-index: 10; pointer-events: none">
+              <defs>
+                <mask id="Mask">
+                  <rect width="100%" height="100%" fill="grey" />
+                  <circle cx="50%" cy="50%" r="75" fill="black" />
+                </mask>
+              </defs>
+              <rect width="100%" height="100%" fill="white" mask="url(#Mask)" />
+              <circle cx="50%" cy="50%" r="5" stroke-width="3" stroke="white" fill="none" opacity=0.5 />
+              <circle cx="50%" cy="50%" r="75" stroke-width="1" stroke="white" fill="none" />
+            </svg>
             <div id="street-view" style="height:300px; width:100%;"></div>
             <br>
             <textarea class="form-control" rows="10" name="description">This is where the starting description will be.</textarea>
             <br>
-            <input type="hidden" id="x" value="999" name="x"/>
-            <input type="hidden" id="y" value="999" name="y"/>
+            <input type="hidden" id="heading" value="9999" name="heading"/>
+            <input type="hidden" id="pitch" value="9999" name="pitch"/>
             <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
             <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
             <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
-            <input type="submit" class="btn btn-primary" value="Submit" onclick="submitTwice()" />
+            <input type="submit" class="btn btn-primary" value="Submit"/> <!--  onclick="SendToServer()" /> -->
           </form>
   		</div>
 	</div>
 </body>
 <script>
-  console.log("{{name.gmaps_url}}");
-  console.log(parseFloat("{{name.trial.lat}}"),parseFloat("{{name.trial.lng}}"));
-  var panorama;
+  var form = document.getElementById("HIT")
+  form.addEventListener('submit', function(event)
+  {
+    var d = new FormData(form);
+    console.log(d);
+
+    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    xmlhttp.open("POST", "/submit");
+    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xmlhttp.send(JSON.stringify(d));
+
+    // form.submit();
+  });
+</script>
+<script>
   function initialize() {
-    panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
+    var panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
       {
         position: {lat: parseFloat("{{name.trial.lat}}"), lng: parseFloat("{{name.trial.lng}}")},
         pov: {heading: 165, pitch: 0},
-        zoom: 1
+        zoom: 1,
+        visible: true,
+        linksControl: false,
+        zoomControl: false,
+        fullscreenControl: false,
+        panControl: false,
+        enableCloseButton: false,
+        addressControl:  false
       });
-    }
+      panorama.addListener('pov_changed', function() {
+          var headingCell = document.getElementById('heading');
+          var pitchCell = document.getElementById('pitch');
+          var zoomCell = document.getElementById('zoom');
+          headingCell.value = panorama.getPov().heading + '';
+          pitchCell.value = panorama.getPov().pitch + '';
+          pitchCell.value = panorama.getPov().zoom + '';
+      });
+      panorama.addListener('position_changed', function() {
+        setTimeout(function() {
+          panorama.setPosition({lat: parseFloat("{{name.trial.lat}}"), lng: parseFloat("{{name.trial.lng}}")});
+        }, 500);
+      })
+     }
 </script>
 <script async defer src="{{name.gmaps_url}}">
 </script>
