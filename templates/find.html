@@ -89,6 +89,8 @@
         enableCloseButton: false,
         addressControl:  false
       });
+
+      console.log(panorama.zoom);
       // Listener to keep form fields updated with pitch and heading
       panorama.addListener('pov_changed', function() {
           var headingCell = document.getElementById('heading');
