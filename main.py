@@ -41,7 +41,6 @@ conn = psycopg2.connect(
 )
 
 
-
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -226,7 +225,7 @@ def rank():
             trial = request.args['trial']
         else:
             trial = random.randint(0, 2)
-            
+
         #Our worker accepted the task
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
