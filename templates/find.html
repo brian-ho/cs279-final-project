@@ -40,7 +40,7 @@
               <circle cx=50% cy=50% r=75 stroke-width=1 stroke="white" fill="none" />
             </svg>
             <div id="street-view"></div>
-            <input type="submit" id="completefind" class="btn btn-primary" disabled="false" value="Click here once you've found the object" onclick="completeFind()" />
+            <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
             <textarea id="description" class="form-control" rows="10" disabled="true" name="updated">{{ name.description }}</textarea>
             <br>
@@ -63,15 +63,20 @@
     // COMPLETE FINDING
     // Ends timer, disables GSV, enables the edit form field and submit button
     function completeFind (){
+      console.log("hullo");
     	var findTime = Date.now() - startTime;
     	document.getElementById("completefind").disabled = true;
     	document.getElementById("findtime").value = findTime;
-    	document.getElementById("overlay").pointer-events = none;
+    	document.getElementById("overlay").style.pointerEvents = 'none';
     	document.getElementById("description").disabled = false;
     	document.getElementById("submit").disabled = false;
-    }
+
+     console.log(findTime);
+   }
 </script>
 <script>
+    // Start the timer
+    var startTime = Date.now();
     // SUBMIT SCRIPT
     // Sends data back to server via XHR
     function submitForm (){
@@ -120,8 +125,6 @@
           panorama.setPosition({lat: parseFloat("{{name.trial_info.lat}}"), lng: parseFloat("{{name.trial_info.lng}}")});
         }, 500);
       })
-      // Start the timer
-      var startTime = Date.now();
      }
 </script>
 <script async defer src="{{name.gmaps_url}}"></script>
