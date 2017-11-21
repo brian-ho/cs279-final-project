@@ -1,5 +1,5 @@
 import os
-#import setup
+# import setup
 from flask import Flask, render_template, url_for, request, make_response
 from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
@@ -7,8 +7,8 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 
 #Start Configuration Variables
-AWS_ACCESS_KEY_ID = XXX
-AWS_SECRET_ACCESS_KEY = XXX
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 #End Configuration Variables
@@ -22,6 +22,3 @@ else:
 connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
                              aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
                              host=AMAZON_HOST)
-
-results = connection.get_assignments("3MJ28H2Y1E9P3WEC0KS8V4UACULO57")
-print results[0].answers[0][0].fields

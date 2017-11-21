@@ -12,46 +12,67 @@
 	<div class="row">
     <div class="col-sm-1"></div>
     <div class="col-sm-8">
-        <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
   			<h1>Verification</h1>
   			<p>Please uncheck any images that do not seem to match the description.</p>
-  			<p class="lead">This is where the description will be.</p>
-
-  			<div class="checkbox">
-  			  <label>
-  			    <input type="checkbox" name="edit1" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 1" height="200" width="200">
-  			  </label>
-  			</div>
-  			<div class="checkbox">
-  			  <label>
-  			    <input type="checkbox" name="edit2" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 2" height="200" width="200">
-  			  </label>
-  			</div>
-  			<div class="checkbox">
-  			  <label>
-  			    <input type="checkbox" name="edit3" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720,-71.1149&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 3" height="200" width="200">
-  			  </label>
-  			</div>
-  			<div class="checkbox">
-  			  <label>
-            <input type="checkbox" name="edit4" value="" checked>
-		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 4" height="200" width="200">
-  			  </label>
-		    </div>
-        <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
-        <br>
-        <input type="hidden" id="user-input" value="" name="user-input"/>
-        <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
-        <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
-        <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
-        <input type="submit" class="btn btn-primary" value="Submit"/>
-      </form>
-
+            <form id="HIT" method="POST" >
+	            <p class="lead">{{name.description}}</p>
+        			<div class="checkbox">
+        			  <label>
+        			    <input type="checkbox" name="img0" value="{{name.img0[2]}}" checked>
+        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img0[0]}}&heading={{name.img0[1]}}&key={{name.gmaps_key}}" alt="Object 1" height="200" width="200">
+        			  </label>
+        			</div>
+        			<div class="checkbox">
+        			  <label>
+        			    <input type="checkbox" name="img1" value="{{name.img1[2]}}" checked>
+        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img1[0]}}&heading={{name.img1[1]}}&key={{name.gmaps_key}}" alt="Object 2" height="200" width="200">
+        			  </label>
+        			</div>
+        			<div class="checkbox">
+        			  <label>
+        			    <input type="checkbox" name="img2" value="{{name.img2[2]}}" checked>
+        			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img2[0]}}&heading={{name.img2[1]}}&key={{name.gmaps_key}}" alt="Object 3" height="200" width="200">
+        			  </label>
+        			</div>
+        			<div class="checkbox">
+        			  <label>
+                  <input type="checkbox" name="img3" value="{{name.img3[2]}}" checked>
+      		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img3[0]}}&heading={{name.img3[1]}}&key={{name.gmaps_key}}" alt="Object 4" height="200" width="200">
+        			  </label>
+      		    </div>
+        <!--<textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>-->
+          <br>
+          <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>
+          <input type="hidden" id="workerId" value="{{ name.worker_id }}" name="workerId"/>
+          <input type="hidden" id="hitId" value="{{ name.hit_id }}" name="hitId"/>
+          <input type="hidden" id="task" value="verify" name="task"/>
+          <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
+          <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
+          <input type="hidden" id="find_id0" value="{{ name.img0[2] }}" name="find_id0"/>
+          <input type="hidden" id="find_id1" value="{{ name.img1[2] }}" name="find_id1"/>
+          <input type="hidden" id="find_id2" value="{{ name.img2[2] }}" name="find_id2"/>
+          <input type="hidden" id="find_id3" value="{{ name.img3[2] }}" name="find_id3"/>
+          <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
+          <input type="submit" class="btn btn-primary" value="Submit" onclick="submitForm()" />
+        </form>
   		</div>
 	</div>
 
 </body>
+<script>
+    // SUBMIT SCRIPT
+    // Sends data back to server via XHR
+    function submitForm (){
+      console.log("SUBMITTING");
+      var form = document.querySelector("#HIT");
+      var d = new FormData(form);
+      // New HttpRequest instance
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("POST", "/submit");
+      xmlhttp.send(d);
+      // Submit back to AWS
+      form.action ="{{ name.amazon_host }}";
+      form.submit();
+    }
+</script>
 </html>
