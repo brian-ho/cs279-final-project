@@ -68,6 +68,7 @@ def find():
 
     # The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        print "CONSENT"
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
         resp = make_response(render_template("consent.html", name = render_data))
@@ -118,6 +119,7 @@ def find():
 def verify():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        print "CONSENT"
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
         resp = make_response(render_template("consent.html"))
@@ -180,6 +182,7 @@ def verify():
 def rank():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
+        print "CONSENT"
         #Our worker hasn't accepted the HIT (task) yet
         resp = make_response(render_template("consent.html"))
 
