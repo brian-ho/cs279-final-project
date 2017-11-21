@@ -15,33 +15,33 @@
         <form id = "endForm" action="{{ name.amazon_host }}" method="POST">
   			<h1>Verification</h1>
   			<p>Please uncheck any images that do not seem to match the description.</p>
-  			<p class="lead">This is where the description will be.</p>
+  			<p class="lead">{{name.description}}</p>
 
   			<div class="checkbox">
   			  <label>
   			    <input type="checkbox" name="edit1" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 1" height="200" width="200">
+  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img0[0]}}&heading={{name.img0[1]}}&key={{name.gmaps_key}}" alt="Object 1" height="200" width="200">
   			  </label>
   			</div>
   			<div class="checkbox">
   			  <label>
   			    <input type="checkbox" name="edit2" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 2" height="200" width="200">
+  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img1[0]}}&heading={{name.img1[1]}}&key={{name.gmaps_key}}" alt="Object 2" height="200" width="200">
   			  </label>
   			</div>
   			<div class="checkbox">
   			  <label>
   			    <input type="checkbox" name="edit3" value="" checked>
-  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720,-71.1149&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 3" height="200" width="200">
+  			    <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img2[0]}}&heading={{name.img2[1]}}&key={{name.gmaps_key}}" alt="Object 3" height="200" width="200">
   			  </label>
   			</div>
   			<div class="checkbox">
   			  <label>
             <input type="checkbox" name="edit4" value="" checked>
-		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location=42.3720257,-71.1141907&heading=151.78&pitch=-0.76&key=AIzaSyA4tZ5mi3ZDA_ypkluBV49Xae5KLW5xaUE" alt="Object 4" height="200" width="200">
+		        <img src="https://maps.googleapis.com/maps/api/streetview?size=200x200&location={{name.trial_info.lat}},{{name.trial_info.lng}}&pitch={{name.img3[0]}}&heading={{name.img3[1]}}&key={{name.gmaps_key}}" alt="Object 4" height="200" width="200">
   			  </label>
 		    </div>
-        <textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>
+        <!--<textarea class="form-control" rows="10" name="dummy_text">This is where the starting description will be.</textarea>-->
         <br>
         <input type="hidden" id="user-input" value="" name="user-input"/>
         <input type="hidden" id="assignmentId" value="{{ name.assignment_id }}" name="assignmentId"/>

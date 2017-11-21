@@ -73,18 +73,21 @@ def find():
     # The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         # Our worker hasn't accepted the HIT (task) yet
-        # TODO RENDER OUR PREVIEW TEMPLATE
+        # TODO RENDER THE CONSENT FORM TEMPLATE
         pass
     else:
         # Our worker accepted the task
         print "FINDING"
 
         render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
             "amazon_host": AMAZON_HOST,
             "hit_id": "dummy_hitId2",
-            "trial": trials[0],
+            "assignment_id": "dummy_assignmentId2",
+            "worker_id": "dummy_workerId2",
+            "trial": 0,
+            "gen": 0,
+            "trial_info": trials[0],
+            "description": 'This is a test',
             "gmaps_url": GMAPS_URL
             }
 
@@ -95,10 +98,11 @@ def find():
             "amazon_host": AMAZON_HOST,
             "hit_id": request.args.get("hitId"),
             "trial": trials[0],
+            "description": 'This is a test',
             "gmaps_url": GMAPS_URL
             }
         '''
-        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'find')
+        log_task_init(render_data, 'find')
 
         # Check status
         #query = "SELECT name, type FROM streets WHERE id = %i" % (best_result["street"])
@@ -118,19 +122,33 @@ def find():
 def verify():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
-        #Our worker hasn't accepted the HIT (task) yet
+        # Our worker hasn't accepted the HIT (task) yet
+        # TODO RENDER THE CONSENT FORM TEMPLATE
         pass
     else:
         #Our worker accepted the task
         print "VERIFYING"
 
+        query = "SELECT pitch, heading FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s;"
+        cursor.execute(query, {'trial_':0, 'gen_':0})
+        conn.commit()
+
+        imgs = cursor.fetchmany(4)
+        print imgs
+
         render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
             "amazon_host": AMAZON_HOST,
             "hit_id": "dummy_hitId2",
-            "trial": trials[0],
-            "gmaps_url": GMAPS_URL
+            "assignment_id": "dummy_assignmentId2",
+            "worker_id": "dummy_workerId2",
+            "trial": 0,
+            "gen": 0,
+            "trial_info": trials[0],
+            "description": 'This is a test',
+            "img0": imgs[0],
+            "img1": imgs[1],
+            "img2": imgs[2],
+            "img3": imgs[3]
             }
         '''
         render_data = {
@@ -146,7 +164,7 @@ def verify():
         }
         '''
 
-        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'verify')
+        log_task_init(render_data, 'verify')
 
         resp = make_response(render_template("verify.html", name = render_data))
         #This is particularly nasty gotcha.
@@ -154,45 +172,6 @@ def verify():
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
     return
-
-
-# ROUTE FOR EDIT TASK
-@app.route('/edit')#, methods=['GET', 'POST'])
-def edit():
-#The following code segment can be used to check if the turker has accepted the task yet
-    if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
-        #Our worker hasn't accepted the HIT (task) yet
-        pass
-    else:
-        #Our worker accepted the task
-        print "EDITING"
-        render_data = {
-            "worker_id": "dummy_workerId2",
-            "assignment_id": "dummy_assignmentId2",
-            "amazon_host": AMAZON_HOST,
-            "hit_id": "dummy_hitId2",
-            "trial": trials[0],
-            "gmaps_url": GMAPS_URL
-            }
-        '''
-        render_data = {
-            "worker_id": request.args.get("workerId"),
-            "assignment_id": request.args.get("assignmentId"),
-            "amazon_host": AMAZON_HOST,
-            "hit_id": request.args.get("hitId"),
-            "some_info_to_pass": request.args.get("someInfoToPass")
-        }
-        '''
-
-        log_task_init(render_data['hit_id'], render_data['assignment_id'], render_data['worker_id'], 'edit')
-
-        resp = make_response(render_template("edit.html", name = render_data))
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
-        resp.headers['x-frame-options'] = 'this_can_be_anything'
-        return resp
-    return
-
 
 # ROUTE FOR RANK TASK
 @app.route('/rank')#, methods=['GET', 'POST'])
@@ -210,7 +189,7 @@ def rank():
             "amazon_host": AMAZON_HOST,
             "hit_id": "dummy_hitId2",
             "trial": trials[0],
-            "gmaps_url": GMAPS_URL
+            "gmaps_key": GMAPS_KEY
             }
         '''
         render_data = {
@@ -235,23 +214,52 @@ def rank():
 @app.route('/submit', methods=['GET', 'POST'])
 def submit():
     print "SUBMITTED"
-
     for key,value in request.form.iterlists():
-        print key,value
+        print key, value
+
+    if request.form['task'] == 'find':
+        print "FIND TASK"
+
+        query = "INSERT INTO find (hit_id, assignment_id, worker_id, original, updated, time, pitch, heading, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(original_)s, %(updated_)s, %(time_)s, %(pitch_)s, %(heading_)s, %(trial_)s, %(gen_)s);"
+        cursor.execute(query, {
+            'hitId_': request.form['hitId'],
+            'assignmentId_': request.form['assignmentId'],
+            'workerId_': request.form['workerId'],
+            'original_': request.form['original'],
+            'updated_': request.form['updated'],
+            'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
+            'pitch_': request.form['pitch'],
+            'heading_': request.form['heading'],
+            'trial_': request.form['trial'],
+            'gen_': request.form['gen']
+            })
+        conn.commit()
 
     resp = make_response(render_template("home.html"))
-    #This is particularly nasty gotcha.
-    #Without this header, your iFrame will not render in Amazon
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
 
 # FUNCTION TO LOG EACH TASK
-def log_task_init(hitId_, assignmentId_, workerId_, task_):
+def log_task_init(render_data, task_):
+    # Retrieve relevant data
+    hitId_ = render_data['hit_id']
+    assignmentId_ = render_data['assignment_id']
+    workerId_ = render_data['worker_id']
+    trial_ = render_data['trial']
+    gen_ = render_data['gen']
+
     # Log the HIT
-    query = "INSERT INTO tracking (hit_id, assignment_id, worker_id, task, status, time) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(task_)s, 'started', %(time_)s) RETURNING id;"
-    cursor.execute(query, {'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'), 'hitId_': hitId_, 'assignmentId_': assignmentId_, 'workerId_': workerId_, 'task_': task_})
+    query = "INSERT INTO tracking (hit_id, assignment_id, worker_id, task, status, time, trial, gen) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(task_)s, 'started', %(time_)s, %(trial_)s, %(gen_)s) RETURNING id;"
+    cursor.execute(query, {
+        'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
+        'hitId_': hitId_, 'assignmentId_': assignmentId_,
+        'workerId_': workerId_,
+        'task_': task_,
+        'trial_': trial_,
+        'gen_': gen_
+        })
     conn.commit()
-    print cursor.fetchone()[0]
+    print "TRACKING ID", cursor.fetchone()[0]
     return
 
 if __name__ == "__main__":
