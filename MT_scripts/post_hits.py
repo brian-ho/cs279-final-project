@@ -36,7 +36,7 @@ qualifications = Qualifications()
 url = "https://cs279-final-project.herokuapp.com/find"
 questionform = ExternalQuestion(url, frame_height)
 create_hit_result = connection.create_hit(
-    title="Test Find",
+    title="CS279 Test",
     description="Insert your description here",
     keywords=["add", "some", "keywords"],
     #duration is in seconds

@@ -117,13 +117,13 @@ def verify():
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         # Our worker hasn't accepted the HIT (task) yet
         # TODO RENDER THE CONSENT FORM TEMPLATE
-        resp = make_response(render_template("consent.html", name = render_data))
+        resp = make_response(render_template("consent.html"))
 
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
-    
+
     else:
         #Our worker accepted the task
         print "VERIFYING"
@@ -162,7 +162,7 @@ def verify():
 
         log_task_init(render_data, 'verify')
 
-        resp = make_response(render_template("verify.html", name = render_data))
+        resp = make_response(render_template("verify.html"))
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
@@ -175,12 +175,13 @@ def rank():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         #Our worker hasn't accepted the HIT (task) yet
-        resp = make_response(render_template("consent.html", name = render_data))
+        resp = make_response(render_template("consent.html"))
 
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
+
     else:
 
         trial = random.randint(0, 2)
