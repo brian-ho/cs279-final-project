@@ -10,6 +10,7 @@ from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedR
 from boto.mturk.price import Price
 import datetime
 import math
+import json
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -163,14 +164,14 @@ def rank():
         pass
     else:
         #Our worker accepted the task
-        query = "SELECT find_id, original, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s;"
+        query = "SELECT find_id, original, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
         cursor.execute(query, {'trial_':0, 'gen_':0})
         conn.commit()
 
         results = cursor.fetchall()
         descriptions = []
         descriptions = [{'find_id':result[0],'text':result[2]} for result in results]
-        descriptions.append({'find_id':'original', 'text':results[0][1]})
+        descriptions.append({'find_id':9999, 'text':results[0][1]})
 
         print descriptions
 
@@ -188,7 +189,6 @@ def rank():
             }
 
         log_task_init(render_data, 'rank')
-
         resp = make_response(render_template("rank.html", name = render_data))
         #This is particularly nasty gotcha.
         #Without this header, your iFrame will not render in Amazon
@@ -263,6 +263,36 @@ def submit():
             })
         conn.commit()
 
+    elif request.form['task'] == 'rank':
+        print "RANK TASK"
+
+        ranking = json.loads(request.form['order'])
+        if len(ranking) < 10:
+            for i in range(10-len(ranking)):
+                ranking.append(-9999)
+
+        print ranking
+
+        query = "INSERT INTO rank (hit_id, assignment_id, worker_id, time, trial, gen, rank0, rank1, rank2, rank3, rank4, rank5, rank6, rank7, rank8, rank9) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(r0_)s, %(r1_)s, %(r2_)s, %(r3_)s, %(r4_)s, %(r5_)s, %(r6_)s, %(r7_)s, %(r8_)s, %(r9_)s);"
+        cursor.execute(query, {
+            'hitId_': request.form['hitId'],
+            'assignmentId_': request.form['assignmentId'],
+            'workerId_': request.form['workerId'],
+            'time_': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S %Z'),
+            'trial_': request.form['trial'],
+            'gen_': request.form['gen'],
+            'r0_': ranking[0],
+            'r1_': ranking[1],
+            'r2_': ranking[2],
+            'r3_': ranking[3],
+            'r4_': ranking[4],
+            'r5_': ranking[5],
+            'r6_': ranking[6],
+            'r7_': ranking[7],
+            'r8_': ranking[8],
+            'r9_': ranking[9],
+            })
+        conn.commit()
 
     resp = make_response(render_template("home.html"))
     resp.headers['x-frame-options'] = 'this_can_be_anything'
