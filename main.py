@@ -22,8 +22,7 @@ GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=
 DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
-
-
+'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -39,7 +38,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-'''
 
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
@@ -278,15 +276,12 @@ def submit():
             })
         conn.commit()
 
-        query = "SELECT COUNT(*) FROM find WHERE trial = %(trial_)s AND hit_id = %(hitId_)s;"
-        cursor.execute(query, {'trial_': request.form['trial'], 'hitId_': request.form['hitId']})
-        conn.commit()
-        count = cursor.fetchone()[0]
-
+        count = get_trial_count('verify', request.form['hitId'])
         if count >= 5:
             print "DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
+            '''
             # Start the verify task
             url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % (verify, request.form['trial'])
             questionform = ExternalQuestion(url, 1200)
@@ -311,6 +306,7 @@ def submit():
             print "Your HIT has been created. You can see it at this link:"
             print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
             print "Your HIT ID is: {}".format(hit_id)
+            '''
 
     elif request.form['task'] == 'verify':
         print "VERIFY TASK"
@@ -319,19 +315,15 @@ def submit():
         for i in range(4):
             if 'img%i' % i in request.form:
                 v.append(1)
-
                 query = "UPDATE find SET valid_count = valid_count + 1 WHERE find_id = %(find_id_)s;"
                 cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
                 conn.commit()
 
             else:
                 v.append(0)
-
                 query = "UPDATE find SET invalid_count = invalid_count + 1 WHERE find_id = %(find_id_)s;"
                 cursor.execute(query, {'find_id_': request.form['find_id%i' % i]})
                 conn.commit()
-
-        print v
 
         query = "INSERT INTO verify (hit_id, assignment_id, worker_id, time, trial, gen, img0, img1, img2, img3, v0, v1, v2, v3) VALUES (%(hitId_)s, %(assignmentId_)s, %(workerId_)s, %(time_)s, %(trial_)s, %(gen_)s, %(img0_)s, %(img1_)s, %(img2_)s, %(img3_)s, %(v0_)s, %(v1_)s, %(v2_)s, %(v3_)s);"
         cursor.execute(query, {
@@ -352,15 +344,12 @@ def submit():
             })
         conn.commit()
 
-        query = "SELECT COUNT(*) FROM verify WHERE trial = %(trial_)s AND hit_id = %(hitId_)s;"
-        cursor.execute(query, {'trial_': request.form['trial'], 'hitId_': request.form['hitId']})
-        conn.commit()
-        count = cursor.fetchone()[0]
-
+        count = get_trial_count('verify', request.form['hitId'])
         if count >= 5:
             print "DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
+            '''
             # Start the verify task
             url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % ('rank', request.form['trial'])
             questionform = ExternalQuestion(url, 1200)
@@ -385,6 +374,7 @@ def submit():
             print "Your HIT has been created. You can see it at this link:"
             print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
             print "Your HIT ID is: {}".format(hit_id)
+            '''
 
     elif request.form['task'] == 'rank':
         print "RANK TASK"
@@ -417,6 +407,11 @@ def submit():
             })
         conn.commit()
 
+        count = get_trial_count('rank', request.form['hitId'])
+        if count >= 5:
+            print "DISABLING HIT"
+            connection.disable_hit(request.form['hitId'])
+
     resp = make_response(render_template("home.html"))
     resp.headers['x-frame-options'] = 'this_can_be_anything'
     return resp
@@ -443,6 +438,22 @@ def log_task_init(render_data, task_):
     conn.commit()
     print "TRACKING ID", cursor.fetchone()[0]
     return
+
+# FUNCTION TO CHECK HOW MANY TASKS PER TRIAL
+def get_trial_count(task, hitId):
+
+    if task == 'find':
+        query = "SELECT COUNT(*) FROM find WHERE hit_id = %(hitId_)s;"
+    elif task == 'verify':
+        query = "SELECT COUNT(*) FROM verify WHERE hit_id = %(hitId_)s;"
+    elif task == 'rank':
+        query = "SELECT COUNT(*) FROM rank WHERE hit_id = %(hitId_)s;"
+
+    cursor.execute(query, {'hitId_':hitId})
+    conn.commit()
+    count = cursor.fetchone()[0]
+    print count
+    return count
 
 # HELPER FUNCTION TO CONVERT GSV ZOOM TO FOV
 def zoom_to_FOV(zoom):
