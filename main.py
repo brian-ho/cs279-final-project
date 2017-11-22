@@ -4,14 +4,14 @@ import os
 import psycopg2
 import urlparse
 from flask import Flask, render_template, url_for, request, make_response
-from boto.mturk.connection import MTurkConnection
-from boto.mturk.question import ExternalQuestion
-from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
-from boto.mturk.price import Price
 import datetime
 import math
 import json
 import random
+# from boto.mturk.connection import MTurkConnection
+# from boto.mturk.question import ExternalQuestion
+# from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
+# from boto.mturk.price import Price
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -45,12 +45,11 @@ conn = psycopg2.connect(
 cursor = conn.cursor()
 print "Connected!\n"
 
-
 # This allows us to specify whether we are pushing to the sandbox or live site.
-if DEV_ENVIROMENT_BOOLEAN:
-    AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
-else:
-    AMAZON_HOST = "https://www.mturk.com/mturk/externalSubmit"
+# if DEV_ENVIROMENT_BOOLEAN:
+#     AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
+# else:
+#     AMAZON_HOST = "https://www.mturk.com/mturk/externalSubmit"
 
 app = Flask(__name__, static_url_path='')
 
@@ -67,21 +66,16 @@ def consent():
 @app.route('/find', methods=['GET', 'POST'])
 def find():
 
-    # The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         print "CONSENT"
         # Our worker hasn't accepted the HIT (task) yet
-        # TODO RENDER THE CONSENT FORM TEMPLATE
         resp = make_response(render_template("consent.html"))
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
 
     else:
         # Our worker accepted the task
         print "FINDING"
-
         if 'trial' in request.args:
             trial = request.args['trial']
         else:
@@ -117,13 +111,8 @@ def find():
                 "gmaps_url": GMAPS_URL
                 }
 
-
         log_task_init(render_data, 'find')
-
         resp = make_response(render_template("find.html", name = render_data))
-
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
     return
@@ -134,12 +123,7 @@ def verify():
 #The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         print "CONSENT"
-        # Our worker hasn't accepted the HIT (task) yet
-        # TODO RENDER THE CONSENT FORM TEMPLATE
         resp = make_response(render_template("consent.html"))
-
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
 
@@ -166,8 +150,6 @@ def verify():
         for i, result in enumerate(results):
             imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
-        print imgs
-
         if "hitId" in request.args:
             render_data = {
                 "amazon_host": AMAZON_HOST,
@@ -184,9 +166,9 @@ def verify():
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
-                "hit_id": "dummy_hitId", #request.args.get("hitId"),
-                "assignment_id" : "dummy_assignment_id", #request.args.get("assignmentId"),
-                "worker_id": "dummy_workerId", #request.args.get("workerId"),
+                "hit_id": "dummy_hitId",
+                "assignment_id" : "dummy_assignment_id",
+                "worker_id": "dummy_workerId",
                 "trial": trial_info[3],
                 "gen": trial_info[4],
                 "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
@@ -195,12 +177,8 @@ def verify():
                 "gmaps_key": GMAPS_KEY
             }
 
-
         log_task_init(render_data, 'verify')
-
         resp = make_response(render_template("verify.html", name = render_data))
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
     return
@@ -208,14 +186,9 @@ def verify():
 # ROUTE FOR RANK TASK
 @app.route('/rank')#, methods=['GET', 'POST'])
 def rank():
-#The following code segment can be used to check if the turker has accepted the task yet
     if request.args.get("assignmentId") == "ASSIGNMENT_ID_NOT_AVAILABLE":
         print "CONSENT"
-        #Our worker hasn't accepted the HIT (task) yet
         resp = make_response(render_template("consent.html"))
-
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
 
@@ -268,11 +241,8 @@ def rank():
                 "gmaps_url": GMAPS_URL
                 }
 
-
         log_task_init(render_data, 'rank')
         resp = make_response(render_template("rank.html", name = render_data))
-        #This is particularly nasty gotcha.
-        #Without this header, your iFrame will not render in Amazon
         resp.headers['x-frame-options'] = 'this_can_be_anything'
         return resp
     return
