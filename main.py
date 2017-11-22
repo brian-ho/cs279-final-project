@@ -23,7 +23,6 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 
-'''
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -39,17 +38,17 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
-
+'''
 
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
-# if DEV_ENVIROMENT_BOOLEAN:
-#     AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
-# else:
-#     AMAZON_HOST = "https://www.mturk.com/mturk/externalSubmit"
+if DEV_ENVIROMENT_BOOLEAN:
+    AMAZON_HOST = "https://workersandbox.mturk.com/mturk/externalSubmit"
+else:
+    AMAZON_HOST = "https://www.mturk.com/mturk/externalSubmit"
 
 app = Flask(__name__, static_url_path='')
 
@@ -141,7 +140,7 @@ def verify():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%' ORDER BY time DESC LIMIT 4;"
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
         cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
         conn.commit()
         results = cursor.fetchmany(4)
@@ -205,7 +204,7 @@ def rank():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%' ORDER BY time DESC LIMIT 8;"
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 8;"
         cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
         conn.commit()
 
