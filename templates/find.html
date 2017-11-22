@@ -102,7 +102,7 @@
     var panorama = new google.maps.StreetViewPanorama(document.getElementById('street-view'),
       {
         position: {lat: parseFloat("{{name.trial_info.lat}}"), lng: parseFloat("{{name.trial_info.lng}}")},
-        pov: {heading: Math.floor(Math.random() * 360), pitch: 0},
+        pov: {heading: Math.floor(Math.random() * 361), pitch: 0},
         zoom: 1,
         visible: true,
         linksControl: false,
