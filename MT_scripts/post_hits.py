@@ -38,7 +38,7 @@ else:
     amount = 0.05
 
 #frame_height in pixels
-frame_height = 800
+frame_height = 1200
 #Here, I create two sample qualifications
 qualifications = Qualifications()
 # qualifications.add(PercentAssignmentsApprovedRequirement(comparator="GreaterThan", integer_value="90"))
