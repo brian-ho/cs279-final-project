@@ -1,4 +1,5 @@
-# Can You Find Me Now? Utilizing Crowdsourcing to Conduct Geolocation with Noisy Information
+# Can You Find Me Now?
+# Utilizing Crowdsourcing to Conduct Geolocation with Noisy Information
 **CS279 Final Project**
 
 ## Abstract
