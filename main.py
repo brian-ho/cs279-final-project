@@ -141,7 +141,7 @@ def verify():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 4;"
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%' ORDER BY time DESC LIMIT 4;"
         cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
         conn.commit()
         results = cursor.fetchmany(4)
@@ -205,7 +205,7 @@ def rank():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%' ORDER BY time DESC LIMIT 8;"
         cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
         conn.commit()
 

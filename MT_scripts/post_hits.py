@@ -52,9 +52,9 @@ create_hit_result = connection.create_hit(
     description="Participate in a short study to find things in Google Street View",
     keywords=["find", "locate", "quick"],
     #duration is in seconds
-    duration = 60*5,
+    duration = 60*10,
     #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-    max_assignments=5,
+    max_assignments=10,
     question=questionform,
     reward=Price(amount=amount),
      #Determines information returned by method in API, not super important
