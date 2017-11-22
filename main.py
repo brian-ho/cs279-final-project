@@ -52,7 +52,7 @@ else:
 
 app = Flask(__name__, static_url_path='')
 
-connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, host=AMAZON_HOST)
+# connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, host=AMAZON_HOST)
 
 # ROUTE FOR INTERNAL NAVIGATION
 @app.route('/')
