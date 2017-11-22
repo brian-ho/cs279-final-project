@@ -20,7 +20,6 @@ GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
 
 DEV_ENVIROMENT_BOOLEAN = True
-DEBUG = True
 
 
 '''

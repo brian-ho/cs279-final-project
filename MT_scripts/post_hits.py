@@ -13,9 +13,7 @@ trial = sys.argv[2]
 #Start Configuration Variables
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-DEV_ENVIROMENT_BOOLEAN = True
-DEBUG = True
-#End Configuration Variables
+DEV_ENVIROMENT_BOOLEAN = False
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -54,7 +52,7 @@ create_hit_result = connection.create_hit(
     #duration is in seconds
     duration = 60*10,
     #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-    max_assignments=10,
+    max_assignments=6,
     question=questionform,
     reward=Price(amount=amount),
      #Determines information returned by method in API, not super important
@@ -66,5 +64,8 @@ create_hit_result = connection.create_hit(
 hit_type_id = create_hit_result[0].HITTypeId
 hit_id = create_hit_result[0].HITId
 print "Your HIT has been created. You can see it at this link:"
-print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+if DEV_ENVIROMENT_BOOLEAN:
+    print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+else:
+    print "https://www.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
 print "Your HIT ID is: {}".format(hit_id)
