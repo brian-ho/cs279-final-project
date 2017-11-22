@@ -44,7 +44,7 @@
             <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
             <br>
-      			<p>Please make any edits, changes or improvements to the description for future users:</p>
+      			<p>Please write a description that includes any improvements for future participants:</p>
             <textarea id="description" class="form-control" rows="10" name="updated" disabled="true">{{ name.description }}</textarea>
             <br>
             <input type="hidden" id="heading" name="heading"/>
@@ -75,7 +75,8 @@
     	document.getElementById("findTime").value = findTime;
     	document.getElementById("completefind").disabled = true;
     	document.getElementById("overlay").style.pointerEvents = 'auto';
-    	document.getElementById("description").disabled = false;
+      document.getElementById("description").disabled = false;
+    	document.getElementById("description").value = '';
     	document.getElementById("btnSubmit").disabled = false;
    }
 </script>
