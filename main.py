@@ -8,10 +8,10 @@ import datetime
 import math
 import json
 import random
-# from boto.mturk.connection import MTurkConnection
-# from boto.mturk.question import ExternalQuestion
-# from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
-# from boto.mturk.price import Price
+from boto.mturk.connection import MTurkConnection
+from boto.mturk.question import ExternalQuestion
+from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
+from boto.mturk.price import Price
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -23,7 +23,7 @@ DEV_ENVIROMENT_BOOLEAN = True
 DEBUG = True
 
 
-'''
+
 # CONNECTING TO POSTGRES
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
@@ -39,6 +39,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+'''
 
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
@@ -52,7 +53,7 @@ else:
 
 app = Flask(__name__, static_url_path='')
 
-# connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, host=AMAZON_HOST)
+connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID, aws_secret_access_key=AWS_SECRET_ACCESS_KEY, host=AMAZON_HOST)
 
 # ROUTE FOR INTERNAL NAVIGATION
 @app.route('/')
@@ -142,7 +143,8 @@ def verify():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
+        # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 4;"
         cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
         conn.commit()
         results = cursor.fetchmany(4)
@@ -206,7 +208,8 @@ def rank():
         conn.commit()
         trial_info = cursor.fetchone()
 
-        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 8;"
+        # query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 8;"
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
         cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
         conn.commit()
 
@@ -275,6 +278,40 @@ def submit():
             })
         conn.commit()
 
+        query = "SELECT COUNT(*) FROM find WHERE trial = %(trial_)s AND hit_id = %(hitId_)s;"
+        cursor.execute(query, {'trial_': request.form['trial'], 'hitId_': request.form['hitId']})
+        conn.commit()
+        count = cursor.fetchone()[0]
+
+        if count >= 5:
+            print "DISABLING HIT"
+            connection.disable_hit(request.form['hitId'])
+
+            # Start the verify task
+            url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % (verify, request.form['trial'])
+            questionform = ExternalQuestion(url, 1200)
+            create_hit_result = connection.create_hit(
+                title="Help locate things in Google Street View — one question only!",
+                description="Participate in a short study to find things in Google Street View",
+                keywords=["find", "locate", "quick"],
+                #duration is in seconds
+                duration = 60*5,
+                #max_assignments will set the amount of independent copies of the task (turkers can only see one)
+                max_assignments=5,
+                question=questionform,
+                reward=Price(amount=0.05),
+                 #Determines information returned by method in API, not super important
+                response_groups=('Minimal', 'HITDetail'),
+                qualifications=Qualifications(),
+                )
+
+            # The response included several fields that will be helpful later
+            hit_type_id = create_hit_result[0].HITTypeId
+            hit_id = create_hit_result[0].HITId
+            print "Your HIT has been created. You can see it at this link:"
+            print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+            print "Your HIT ID is: {}".format(hit_id)
+
     elif request.form['task'] == 'verify':
         print "VERIFY TASK"
 
@@ -314,6 +351,40 @@ def submit():
             'v3_' : v[3]
             })
         conn.commit()
+
+        query = "SELECT COUNT(*) FROM verify WHERE trial = %(trial_)s AND hit_id = %(hitId_)s;"
+        cursor.execute(query, {'trial_': request.form['trial'], 'hitId_': request.form['hitId']})
+        conn.commit()
+        count = cursor.fetchone()[0]
+
+        if count >= 5:
+            print "DISABLING HIT"
+            connection.disable_hit(request.form['hitId'])
+
+            # Start the verify task
+            url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % ('rank', request.form['trial'])
+            questionform = ExternalQuestion(url, 1200)
+            create_hit_result = connection.create_hit(
+                title="Help locate things in Google Street View — one question only!",
+                description="Participate in a short study to find things in Google Street View",
+                keywords=["find", "locate", "quick"],
+                #duration is in seconds
+                duration = 60*5,
+                #max_assignments will set the amount of independent copies of the task (turkers can only see one)
+                max_assignments=5,
+                question=questionform,
+                reward=Price(amount=0.05),
+                 #Determines information returned by method in API, not super important
+                response_groups=('Minimal', 'HITDetail'),
+                qualifications=Qualifications(),
+                )
+
+            # The response included several fields that will be helpful later
+            hit_type_id = create_hit_result[0].HITTypeId
+            hit_id = create_hit_result[0].HITId
+            print "Your HIT has been created. You can see it at this link:"
+            print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+            print "Your HIT ID is: {}".format(hit_id)
 
     elif request.form['task'] == 'rank':
         print "RANK TASK"
@@ -373,7 +444,7 @@ def log_task_init(render_data, task_):
     print "TRACKING ID", cursor.fetchone()[0]
     return
 
-# HELPER FUNCTION TO CONVER GSV ZOOM TO FOV
+# HELPER FUNCTION TO CONVERT GSV ZOOM TO FOV
 def zoom_to_FOV(zoom):
     # Note that we increase zoom by 1
     return math.atan(2**(1 - (zoom+1))) * 360 / math.pi
