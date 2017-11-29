@@ -27,7 +27,6 @@
   			<h1>Find Things in Google StreetView</h1>
   			<p>Based on the description below, please locate the object in the Google StreetView panorama as quickly and accurately as possible. You can look around and zoom, but cannot move. Please change the view so that the object is in the middle (the circled area). </p>
           <form id = "HIT" method="POST" >
-      			<p class="lead">{{ name.description }}</p>
             <svg id="overlay">
               <defs>
                 <mask id="mask">
@@ -41,12 +40,18 @@
             </svg>
             <div id="street-view"></div>
             <br>
+            <div class="alert alert-info">
+				{{ name.description }}
+			</div>
             <input type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()" />
             <br>
+            <div id="editStep" style="display:none">
             <br>
-      			<p>Please write a description that includes any improvements for future participants:</p>
-            <textarea id="description" class="form-control" rows="10" name="updated" disabled="true">{{ name.description }}</textarea>
-            <br>
+      			<p>Please write a description that improves on the above description in the blue box above so that other people can find the object:</p>
+	            <textarea id="description" class="form-control" rows="10" name="updated"></textarea>
+	            <br>
+	            <input type="button" id="completedit" class="btn btn-primary" value="Click here once you've written the description" onclick="completeEdit()" disabled="true" />
+        	</div>
             <input type="hidden" id="heading" name="heading"/>
             <input type="hidden" id="pitch" name="pitch"/>
             <input type="hidden" id="zoom" value=1 name="zoom"/>
@@ -58,11 +63,18 @@
             <input type="hidden" id="task" value="find" name="task"/>
             <input type="hidden" id="gen" value="{{ name.gen }}" name="gen"/>
             <input type="hidden" id="trial" value="{{ name.trial }}" name="trial"/>
-            <input type="button" id="btnSubmit" class="btn btn-primary" value="Submit" disabled="true" onclick="submitForm()" />
+            <br>
+            <br>
+        	<input type="hidden" id="btnSubmit" class="btn btn-primary" value="Submit" onclick="submitForm()" />
           </form>
   		</div>
 	</div>
 </body>
+
+<script>
+	
+
+</script>
 <script>
     // COMPLETE FINDING
     // Start the timer
@@ -71,14 +83,24 @@
     // Ends timer, disables GSV, enables the edit form field and submit button
     function completeFind (){
     	var findTime = (Date.now() - startTime)/1000.0;
-      console.log(findTime);
+      	console.log(findTime);
     	document.getElementById("findTime").value = findTime;
-    	document.getElementById("completefind").disabled = true;
+    	document.getElementById("editStep").style.display = "inline";
     	document.getElementById("overlay").style.pointerEvents = 'auto';
-      document.getElementById("description").disabled = false;
-    	document.getElementById("description").value = '';
-    	document.getElementById("btnSubmit").disabled = false;
    }
+
+   	function completeEdit (){
+    	document.getElementById("btnSubmit").type = "button";
+    }
+
+    // CHECK FOR NUMBER OF CHARACTERS IN DESCRIPTION FIELD
+    setInterval(function() {
+   	if (document.getElementById("description").val().length > 20) {
+    document.getElementById("completedit").attr('disabled', false);
+	} else {
+	    document.getElementById("completedit").attr('disabled', true);
+  	}
+	}, 100);
 </script>
 <script>
     // SUBMIT SCRIPT
