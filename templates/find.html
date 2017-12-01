@@ -48,7 +48,7 @@
             <div id="editStep" style="display:none">
             <br>
       			<p>Please write a description that improves on the above description in the blue box above so that other people can find the object:</p>
-	            <textarea id="description" class="form-control" rows="10" name="updated"></textarea>
+	            <textarea id="description" class="form-control" rows="5" name="updated"></textarea>
 	            <br>
 	            <input type="button" id="completedit" class="btn btn-primary" value="Click here once you've written the description" onclick="completeEdit()" disabled="true" />
         	</div>
@@ -70,11 +70,6 @@
   		</div>
 	</div>
 </body>
-
-<script>
-	
-
-</script>
 <script>
     // COMPLETE FINDING
     // Start the timer
@@ -87,20 +82,46 @@
     	document.getElementById("findTime").value = findTime;
     	document.getElementById("editStep").style.display = "inline";
     	document.getElementById("overlay").style.pointerEvents = 'auto';
+
+      var area = document.getElementById('description');
+      if (area.addEventListener) {
+        area.addEventListener('input', function() {
+          // event handling code for sane browsers
+          console.log('text changing'+$(this).val().length );
+           	if ($(this).val().length > 20) {
+            $('#completedit').attr('disabled', false);
+        	} else {
+      	    $('#completedit').attr('disabled', true);
+          	}
+        }, false);
+      } else if (area.attachEvent) {
+        area.attachEvent('onpropertychange', function() {
+          // IE-specific event handling code
+          console.log('text changing'+$(this).val().length );
+           	if ($(this).val().length > 20) {
+            $('#completedit').attr('disabled', false);
+        	} else {
+      	    $('#completedit').attr('disabled', true);
+          	}
+        });
+      }
    }
 
    	function completeEdit (){
     	document.getElementById("btnSubmit").type = "button";
     }
 
-    // CHECK FOR NUMBER OF CHARACTERS IN DESCRIPTION FIELD
-    setInterval(function() {
-   	if (document.getElementById("description").val().length > 20) {
-    document.getElementById("completedit").attr('disabled', false);
-	} else {
-	    document.getElementById("completedit").attr('disabled', true);
-  	}
-	}, 100);
+  //   // CHECK FOR NUMBER OF CHARACTERS IN DESCRIPTION FIELD
+  //   setInterval(function() {
+  //  	if (document.getElementById("description").val().length > 20) {
+  //   document.getElementById("completedit").attr('disabled', false);
+	// } else {
+	//     document.getElementById("completedit").attr('disabled', true);
+  // 	}
+	// }, 100);
+
+
+
 </script>
 <script>
     // SUBMIT SCRIPT
