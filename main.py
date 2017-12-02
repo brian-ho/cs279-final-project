@@ -161,22 +161,25 @@ def verify():
         else:
             trial = random.randint(0, 2)
 
-        # if 'workerId' in request.args:
-        #     query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
-        #     cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
-        #     conn.commit()
-        #     check = cursor.fetchone()
-        #
-        #     if check > 1:
-        #         resp = make_response(render_template("sorry.html"))
-        #         resp.headers['x-frame-options'] = 'this_can_be_anything'
-        #         return resp
+        if 'workerId' in request.args:
+            print "CHECKING WORKER"
+            query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
+            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+            conn.commit()
+            check = cursor.fetchone()
 
+            if check > 1:
+                resp = make_response(render_template("sorry.html"))
+                resp.headers['x-frame-options'] = 'this_can_be_anything'
+                return resp
+
+        print "CHECKING TRIAL"
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
         conn.commit()
         trial_info = cursor.fetchone()
 
+        print "GETTING FIND TASKS"
         # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
         query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time;"
         cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
