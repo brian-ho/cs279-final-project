@@ -162,7 +162,7 @@ def verify():
 
         if 'trial' in request.args:
             print "SETTING TRIAL"
-            trial = request.args.get['trial']
+            trial = request.args['trial']
         else:
             trial = random.randint(0, 2)
 
