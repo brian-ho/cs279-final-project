@@ -161,7 +161,7 @@ def verify():
             print arg, request.args[arg]
 
         if 'trial' in request.args:
-            print "SETTING TRIAL"
+            # print "SETTING TRIAL"
             trial = request.args['trial']
         else:
             trial = random.randint(0, 2)
@@ -171,7 +171,8 @@ def verify():
             query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
             cursor.execute(query, {"workerId_":request.args["workerId"], "trial_":trial})
             conn.commit()
-            check = cursor.fetchone()
+            check = cursor.fetchone()[0]
+            print check
 
             if check > 1:
                 resp = make_response(render_template("sorry.html"))
