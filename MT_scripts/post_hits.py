@@ -13,13 +13,12 @@ trial = sys.argv[2]
 #Start Configuration Variables
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-DEV_ENVIROMENT_BOOLEAN = False
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
-if DEV_ENVIROMENT_BOOLEAN:
-    AMAZON_HOST = "mechanicalturk.sandbox.amazonaws.com"
-else:
+if len(sys.argv) > 3 and sys.argv[3] == 'pub':
     AMAZON_HOST = "mechanicalturk.amazonaws.com"
+else:
+    AMAZON_HOST = "mechanicalturk.sandbox.amazonaws.com"
 
 connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
                              aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
@@ -64,8 +63,8 @@ create_hit_result = connection.create_hit(
 hit_type_id = create_hit_result[0].HITTypeId
 hit_id = create_hit_result[0].HITId
 print "Your HIT has been created. You can see it at this link:"
-if DEV_ENVIROMENT_BOOLEAN:
-    print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
-else:
+if len(sys.argv) > 3 and sys.argv[3] == 'pub':
     print "https://www.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+else:
+    print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
 print "Your HIT ID is: {}".format(hit_id)
