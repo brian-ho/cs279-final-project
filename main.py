@@ -157,6 +157,9 @@ def verify():
         print "VERIFYING"
         print request
 
+        for arg in request.args:
+            print arg, request.args[arg]
+
         if 'trial' in request.args:
             print "SETTING TRIAL"
             trial = request.args.get['trial']
