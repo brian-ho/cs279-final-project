@@ -13,7 +13,7 @@ trial = sys.argv[2]
 #Start Configuration Variables
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
 AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
-DEV_ENVIROMENT_BOOLEAN = True
+DEV_ENVIROMENT_BOOLEAN = False
 
 #This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -27,11 +27,11 @@ connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
 
 #5 cents per HIT
 if task == 'find':
-    amount = 0.05
+    amount = 0.15
 elif task == 'verify':
     amount = 0.05
 elif task == 'rank':
-    amount = 0.05
+    amount = 0.10
 else:
     amount = 0.05
 

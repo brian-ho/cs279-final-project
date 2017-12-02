@@ -61,6 +61,10 @@ def main():
 def consent():
     return render_template('consent.html')
 
+@app.route('/sorry')
+def sorry():
+    return render_template('sorry.html')
+
 # ROUTE FOR FIND TASK
 @app.route('/find', methods=['GET', 'POST'])
 def find():
@@ -79,6 +83,17 @@ def find():
             trial = request.args['trial']
         else:
             trial = random.randint(0, 2)
+
+        if 'workerId' in request.args:
+            query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
+            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+            conn.commit()
+            check = cursor.fetchone()
+
+            if check > 1:
+                resp = make_response(render_template("sorry.html"))
+                resp.headers['x-frame-options'] = 'this_can_be_anything'
+                return resp
 
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
@@ -131,9 +146,20 @@ def verify():
         print "VERIFYING"
 
         if 'trial' in request.args:
-            trial = request.args['trial']
+            trial = request.args.get['trial']
         else:
             trial = random.randint(0, 2)
+
+        if 'workerId' in request.args:
+            query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
+            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+            conn.commit()
+            check = cursor.fetchone()
+
+            if check > 1:
+                resp = make_response(render_template("sorry.html"))
+                resp.headers['x-frame-options'] = 'this_can_be_anything'
+                return resp
 
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
@@ -198,6 +224,17 @@ def rank():
             trial = request.args['trial']
         else:
             trial = random.randint(0, 2)
+
+        if 'workerId' in request.args:
+            query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
+            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+            conn.commit()
+            check = cursor.fetchone()
+
+            if check > 1:
+                resp = make_response(render_template("sorry.html"))
+                resp.headers['x-frame-options'] = 'this_can_be_anything'
+                return resp
 
         #Our worker accepted the task
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
@@ -450,7 +487,7 @@ def get_trial_count(task, hitId):
 
     cursor.execute(query, {'hitId_':hitId})
     conn.commit()
-    count = cursor.fetchone()[0]
+    count = cursor.fetchone()
     print count
     return count
 
