@@ -323,7 +323,7 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('verify', request.form['hitId'])
+        count = get_trial_count('find', request.form['hitId'])
         if count >= 5:
             print "DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
