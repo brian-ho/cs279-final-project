@@ -12,8 +12,6 @@ from boto.mturk.connection import MTurkConnection
 from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
-import logging
-
 
 # CONFIG VARIABLES
 AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
@@ -40,6 +38,7 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
 )
+
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
@@ -171,7 +170,7 @@ def verify():
         trial_info = cursor.fetchone()
 
         # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT;"
+        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time;"
         cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
         conn.commit()
         results = cursor.fetchmany(4)
@@ -491,7 +490,7 @@ def get_trial_count(task, hitId):
 
     cursor.execute(query, {'hitId_':hitId})
     conn.commit()
-    count = cursor.fetchone()
+    count = cursor.fetchone()[0]
     print count
     return count
 
@@ -503,5 +502,3 @@ def zoom_to_FOV(zoom):
 if __name__ == "__main__":
     # app.debug = DEBUG
     app.run(threaded=True)
-    app.logger.addHandler(logging.StreamHandler(sys.stdout))
-    app.logger.setLevel(logging.ERROR)
