@@ -169,7 +169,7 @@ def verify():
         if 'workerId' in request.args:
             print "CHECKING WORKER"
             query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
-            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+            cursor.execute(query, {"workerId_":request.args["workerId"], "trial_":trial})
             conn.commit()
             check = cursor.fetchone()
 
