@@ -28,7 +28,7 @@ connection = MTurkConnection(aws_access_key_id=AWS_ACCESS_KEY_ID,
 if task == 'find':
     amount = 0.15
 elif task == 'verify':
-    amount = 0.05
+    amount = 0.10
 elif task == 'rank':
     amount = 0.10
 else:
