@@ -13,6 +13,7 @@ from boto.mturk.question import ExternalQuestion
 from boto.mturk.qualification import Qualifications, PercentAssignmentsApprovedRequirement, NumberHitsApprovedRequirement
 from boto.mturk.price import Price
 import logging
+import sys
 app = Flask(__name__)
 
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
