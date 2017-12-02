@@ -161,16 +161,16 @@ def verify():
         else:
             trial = random.randint(0, 2)
 
-        if 'workerId' in request.args:
-            query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
-            cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
-            conn.commit()
-            check = cursor.fetchone()
-
-            if check > 1:
-                resp = make_response(render_template("sorry.html"))
-                resp.headers['x-frame-options'] = 'this_can_be_anything'
-                return resp
+        # if 'workerId' in request.args:
+        #     query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
+        #     cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
+        #     conn.commit()
+        #     check = cursor.fetchone()
+        #
+        #     if check > 1:
+        #         resp = make_response(render_template("sorry.html"))
+        #         resp.headers['x-frame-options'] = 'this_can_be_anything'
+        #         return resp
 
         query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
         cursor.execute(query, {"trial_":trial})
@@ -499,7 +499,7 @@ def get_trial_count(task, hitId):
     cursor.execute(query, {'hitId_':hitId})
     conn.commit()
     count = cursor.fetchone()[0]
-    print count
+    print "TASK PERFORMED %i" % count
     return count
 
 # HELPER FUNCTION TO CONVERT GSV ZOOM TO FOV
