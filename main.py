@@ -178,54 +178,55 @@ def verify():
                 resp.headers['x-frame-options'] = 'this_can_be_anything'
                 return resp
 
-        print "CHECKING TRIAL"
-        query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
-        cursor.execute(query, {"trial_":trial})
-        conn.commit()
-        trial_info = cursor.fetchone()
-
-        print "GETTING FIND TASKS"
-        # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
-        query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time;"
-        cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
-        conn.commit()
-        results = cursor.fetchmany(4)
-
-        imgs = []
-        for i, result in enumerate(results):
-            imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
-
-        if "hitId" in request.args:
-            render_data = {
-                "amazon_host": AMAZON_HOST,
-                "hit_id": request.args.get("hitId"),
-                "assignment_id" : request.args.get("assignmentId"),
-                "worker_id": request.args.get("workerId"),
-                "trial": trial_info[3],
-                "gen": trial_info[4],
-                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-                "description": trial_info[2],
-                "images": imgs,
-                "gmaps_key": GMAPS_KEY
-                }
         else:
-            render_data = {
-                "amazon_host": AMAZON_HOST,
-                "hit_id": "dummy_hitId",
-                "assignment_id" : "dummy_assignment_id",
-                "worker_id": "dummy_workerId",
-                "trial": trial_info[3],
-                "gen": trial_info[4],
-                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-                "description": trial_info[2],
-                "images": imgs,
-                "gmaps_key": GMAPS_KEY
-            }
-        print "RENDERING"
-        log_task_init(render_data, 'verify')
-        resp = make_response(render_template("verify.html", name = render_data))
-        resp.headers['x-frame-options'] = 'this_can_be_anything'
-        return resp
+            print "CHECKING TRIAL"
+            query = "SELECT lat, lng, description, trial, gen FROM descriptions WHERE trial = %(trial_)s ORDER BY gen DESC LIMIT 1;"
+            cursor.execute(query, {"trial_":trial})
+            conn.commit()
+            trial_info = cursor.fetchone()
+
+            print "GETTING FIND TASKS"
+            # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
+            query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time;"
+            cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
+            conn.commit()
+            results = cursor.fetchmany(4)
+
+            imgs = []
+            for i, result in enumerate(results):
+                imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
+
+            if "hitId" in request.args:
+                render_data = {
+                    "amazon_host": AMAZON_HOST,
+                    "hit_id": request.args.get("hitId"),
+                    "assignment_id" : request.args.get("assignmentId"),
+                    "worker_id": request.args.get("workerId"),
+                    "trial": trial_info[3],
+                    "gen": trial_info[4],
+                    "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                    "description": trial_info[2],
+                    "images": imgs,
+                    "gmaps_key": GMAPS_KEY
+                    }
+            else:
+                render_data = {
+                    "amazon_host": AMAZON_HOST,
+                    "hit_id": "dummy_hitId",
+                    "assignment_id" : "dummy_assignment_id",
+                    "worker_id": "dummy_workerId",
+                    "trial": trial_info[3],
+                    "gen": trial_info[4],
+                    "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                    "description": trial_info[2],
+                    "images": imgs,
+                    "gmaps_key": GMAPS_KEY
+                }
+            print "RENDERING"
+            log_task_init(render_data, 'verify')
+            resp = make_response(render_template("verify.html", name = render_data))
+            resp.headers['x-frame-options'] = 'this_can_be_anything'
+            return resp
     return
 
 # ROUTE FOR RANK TASK
