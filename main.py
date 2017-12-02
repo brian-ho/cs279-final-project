@@ -155,6 +155,7 @@ def verify():
     else:
         #Our worker accepted the task
         print "VERIFYING"
+        print request
 
         if 'trial' in request.args:
             trial = request.args.get['trial']
