@@ -91,6 +91,7 @@ def find():
             check = cursor.fetchone()
 
             if check > 1:
+                "WORKER ALREADY COMPLETED TASK"
                 resp = make_response(render_template("sorry.html"))
                 resp.headers['x-frame-options'] = 'this_can_be_anything'
                 return resp
@@ -99,6 +100,7 @@ def find():
         cursor.execute(query, {"trial_":trial})
         conn.commit()
         trial_info = cursor.fetchone()
+        print "QUERYING DB FOR GEN"
 
         if "hitId" in request.args:
             render_data = {
@@ -112,6 +114,8 @@ def find():
                 "description": trial_info[2],
                 "gmaps_url": GMAPS_URL
                 }
+            print "VALID AWS"
+
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
@@ -125,6 +129,7 @@ def find():
                 "gmaps_url": GMAPS_URL
                 }
 
+        print "RENDERING"
         log_task_init(render_data, 'find')
         resp = make_response(render_template("find.html", name = render_data))
         resp.headers['x-frame-options'] = 'this_can_be_anything'
