@@ -86,10 +86,12 @@ def find():
             trial = random.randint(0, 2)
 
         if 'workerId' in request.args:
+            print "CHECKING WORKER"
             query = "SELECT COUNT(*) FROM find WHERE worker_id = %(workerId_)s and trial = %(trial_)s;"
             cursor.execute(query, {"workerId_":request.args.get("workerId"), "trial_":trial})
             conn.commit()
-            check = cursor.fetchone()
+            check = cursor.fetchone()[0]
+            print check
 
             if check > 1:
                 print "WORKER ALREADY COMPLETED TASK"
