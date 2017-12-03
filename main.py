@@ -334,7 +334,7 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('verify', request.form['hitId'])
+        count = get_trial_count('verify', request.form)
         if count >= 5:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
@@ -454,16 +454,19 @@ def workerIdCheck(args_, trial):
         return False
 
 # FUNCTION TO CHECK HOW MANY TASKS PER TRIAL
-def get_trial_count(task, hitId):
+def get_trial_count(task, form):
 
     if task == 'find':
-        query = "SELECT COUNT(*) FROM find WHERE hit_id = %(hitId_)s;"
+        # query = "SELECT COUNT(*) FROM find WHERE hit_id = %(hitId_)s;"
+        query = "SELECT COUNT(*) FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s;"
     elif task == 'verify':
-        query = "SELECT COUNT(*) FROM verify WHERE hit_id = %(hitId_)s;"
+        # query = "SELECT COUNT(*) FROM verify WHERE hit_id = %(hitId_)s;"
+        query = "SELECT COUNT(*) FROM verify WHERE trial = %(trial_)s AND gen = %(gen_)s;"
     elif task == 'rank':
-        query = "SELECT COUNT(*) FROM rank WHERE hit_id = %(hitId_)s;"
+        # query = "SELECT COUNT(*) FROM rank WHERE hit_id = %(hitId_)s;"
+        query = "SELECT COUNT(*) FROM rank WHERE trial = %(trial_)s AND gen = %(gen_)s;"
 
-    cursor.execute(query, {'hitId_':hitId})
+    cursor.execute(query, {'trial_':form['trial'], 'gen_':form['gen']})
     conn.commit()
     count = cursor.fetchone()[0]
     print "---TASK PERFORMED %i TIMES" % count
