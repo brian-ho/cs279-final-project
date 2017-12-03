@@ -73,8 +73,8 @@ def find():
 
     else:
         # Our worker accepted the task
-        print "FINDING"
         trial_info = getTrialInfo(request.args)
+        print "FINDING: TRIAL %i" % trial_info[3]
         if workerIdCheck(request.args, trial_info[3]):
             print "---SORRY!"
             resp = make_response(render_template("sorry.html"))
@@ -125,9 +125,9 @@ def verify():
         return resp
 
     else:
-        print "VERIFYING"
         # Our worker accepted the task
         trial_info = getTrialInfo(request.args)
+        print "VERIFYING: TRIAL %i" % trial_info[3]
         if workerIdCheck(request.args, trial_info[3]):
             print "---SORRY!"
             resp = make_response(render_template("sorry.html"))
@@ -194,9 +194,9 @@ def rank():
         return resp
 
     else:
-        print "RANKING"
         # Our worker accepted the task
         trial_info = getTrialInfo(request.args)
+        print "RANKING: TRIAL %i" % trial_info[3]
         if workerIdCheck(request.args, trial_info[3]):
             print "---SORRY!"
             resp = make_response(render_template("sorry.html"))
@@ -449,7 +449,7 @@ def workerIdCheck(args_, trial):
         check = cursor.fetchone()[0]
 
         print "---WORKER HAS DONE TASK %i TIMES" % check
-        return check > 1
+        return check > 0
     else:
         return False
 
