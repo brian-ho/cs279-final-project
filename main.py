@@ -270,8 +270,8 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('find', request.form['hitId'])
-        if count >= 5:
+        count = get_trial_count('find', request.form)
+        if count >= 10:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
@@ -335,7 +335,7 @@ def submit():
         conn.commit()
 
         count = get_trial_count('verify', request.form)
-        if count >= 5:
+        if count >= 10:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
@@ -396,8 +396,8 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('rank', request.form['hitId'])
-        if count >= 5:
+        count = get_trial_count('rank', request.form)
+        if count >= 10:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
