@@ -3,16 +3,16 @@ import sys
 
 gen = sys.argv[1]
 # else:
-csv = "data/verify_gen%s.csv" % gen
-csv2 = "data/find_gen%s.csv" % gen
+csv = "data/rank%s.csv" % gen
+csv2 = "data/find%s.csv" % gen
 
-verify = pd.read_csv(csv, index_col=False)
-verify.sort_values('trial')
+rank = pd.read_csv(csv, index_col=False)
+rank.sort_values('trial')
 
 find = pd.read_csv(csv2, index_col=False)
 
 ranks = ['rank%i' % i for i in range(10)]
-crosstab = pd.melt(verify, ['rank_id', 'trial'], ranks)
+crosstab = pd.melt(rank, ['rank_id', 'trial'], ranks)
 crosstab['rank'] = crosstab['variable'].apply(lambda x: ranks.index(x))
 grouped = crosstab.groupby(['trial', 'value'])['rank'].mean()
 grouped = grouped.reset_index()
