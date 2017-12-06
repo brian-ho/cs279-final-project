@@ -51,7 +51,7 @@ create_hit_result = connection.create_hit(
     #duration is in seconds
     duration = 60*10,
     #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-    max_assignments=6,
+    max_assignments=10,
     question=questionform,
     reward=Price(amount=amount),
      #Determines information returned by method in API, not super important
