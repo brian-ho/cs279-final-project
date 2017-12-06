@@ -206,7 +206,7 @@ def rank():
 
         # query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 8;"
         query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT %(limit_)s;"
-        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4], 'limit_':TASK_LIMIT}})
+        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4], 'limit_':TASK_LIMIT})
         conn.commit()
 
         results = cursor.fetchall()
