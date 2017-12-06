@@ -19,6 +19,7 @@ AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
 DEV_ENVIROMENT_BOOLEAN = False
+TASK_LIMIT = 10
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -140,8 +141,8 @@ def verify():
 
             print "---GETTING FIND TASKS"
             # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
-            query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time;"
-            cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4]})
+            query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s ORDER BY time LIMIT %(limit_)s;"
+            cursor.execute(query, {'trial_':trial_info[3], 'gen_':trial_info[4], 'limit_':TASK_LIMIT})
             conn.commit()
             results = cursor.fetchall()
 
@@ -204,8 +205,8 @@ def rank():
             return resp
 
         # query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 8;"
-        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT 8;"
-        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4]})
+        query = "SELECT find_id, updated FROM find WHERE invalid_count <= 1 AND trial = %(trial_)s AND gen = %(gen_)s ORDER BY time DESC LIMIT %(limit_)s;"
+        cursor.execute(query, {'trial_': trial_info[3], 'gen_': trial_info[4], 'limit_':TASK_LIMIT}})
         conn.commit()
 
         results = cursor.fetchall()
