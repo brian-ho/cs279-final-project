@@ -30,7 +30,7 @@
             <div class="alert alert-info">
               {{ name.description }}
             </div>
-            <input type="button" id="completedit" class="btn btn-primary" value="Click here once you've read the description" onclick="completeRead()" />
+            <input type="button" id="completReadBtn" class="btn btn-primary" value="Click here once you've read the description" onclick="completeRead()" />
             <br><br>
 
             <svg style="pointerEvents: auto" id="overlay">
@@ -48,7 +48,7 @@
             <div id="findStep">
               <div id="street-view"></div>
               <br>
-              <input style="display:none" type="button" id="completefind" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()"/>
+              <input style="display:none" type="button" id="completeFindBtn" class="btn btn-primary" value="Click here once you've found the object" onclick="completeFind()"/>
               <br>
             </div>
 
@@ -57,7 +57,7 @@
         			<p>Please write a description that improves on the above description in the blue box above so that other people can find the object:</p>
   	            <textarea id="description" class="form-control" rows="5" name="updated"></textarea>
   	            <br>
-  	            <input type="button" id="completedit" class="btn btn-primary" value="Click here once you've written the description" onclick="completeEdit()" disabled="true" />
+  	            <input type="button" id="completEditBtn" class="btn btn-primary" value="Click here once you've written the description" onclick="completeEdit()" disabled="true" />
     	      </div>
 
             <input type="hidden" id="heading" name="heading"/>
@@ -88,7 +88,7 @@
       document.getElementById("mask_rect").style.fill = 'grey';
       document.getElementById("mask_circle").style.fill = 'black';
       document.getElementById("overlay").style.pointerEvents = 'none';
-      document.getElementById("completefind").style.display = 'inline';
+      document.getElementById("completeFindBtn").style.display = 'inline';
     }
 
     // Ends timer, disables GSV, enables the edit form field and submit button
@@ -105,9 +105,9 @@
           // event handling code for sane browsers
           console.log('text changing'+$(this).val().length );
            	if ($(this).val().length > 20) {
-            $('#completedit').attr('disabled', false);
+            $('#completEditBtn').attr('disabled', false);
         	} else {
-      	    $('#completedit').attr('disabled', true);
+      	    $('#completEditBtn').attr('disabled', true);
           	}
         }, false);
       } else if (area.attachEvent) {
@@ -115,9 +115,9 @@
           // IE-specific event handling code
           console.log('text changing'+$(this).val().length );
            	if ($(this).val().length > 20) {
-            $('#completedit').attr('disabled', false);
+            $('#completEditBtn').attr('disabled', false);
         	} else {
-      	    $('#completedit').attr('disabled', true);
+      	    $('#completEditBtn').attr('disabled', true);
           	}
         });
       }
