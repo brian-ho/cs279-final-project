@@ -27,8 +27,8 @@ if DEV_ENVIROMENT_BOOLEAN:
 else:
     AMAZON_HOST = "https://www.mturk.com/mturk/externalSubmit"
 
-
 # CONNECTING TO POSTGRES
+'''
 conn_string = "host='localhost' dbname='cs279' user='brianho' password=''"
 print "Connecting to database ...\n	-> %s" % (conn_string)
 conn = psycopg2.connect(conn_string)
@@ -42,7 +42,6 @@ conn = psycopg2.connect(
     host=url.hostname,
     port=url.port
     )
-'''
 # conn.cursor will return a cursor object, you can use this cursor to perform queries
 cursor = conn.cursor()
 print "Connected!\n"
