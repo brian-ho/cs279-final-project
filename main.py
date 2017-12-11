@@ -19,7 +19,7 @@ AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
 GMAPS_KEY = os.environ['GMAPS_KEY']
 GMAPS_URL = "https://maps.googleapis.com/maps/api/js?key="+GMAPS_KEY+"&callback=initialize"
 DEV_ENVIROMENT_BOOLEAN = False
-TASK_LIMIT = 10
+TASK_LIMIT = 5
 
 # This allows us to specify whether we are pushing to the sandbox or live site.
 if DEV_ENVIROMENT_BOOLEAN:
@@ -272,36 +272,10 @@ def submit():
         conn.commit()
 
         count = get_trial_count('find', request.form)
-        if count >= 10:
+        if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
-
-            '''
-            # Start the verify task
-            url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % (verify, request.form['trial'])
-            questionform = ExternalQuestion(url, 1200)
-            create_hit_result = connection.create_hit(
-                title="Help locate things in Google Street View — one question only!",
-                description="Participate in a short study to find things in Google Street View",
-                keywords=["find", "locate", "quick"],
-                #duration is in seconds
-                duration = 60*5,
-                #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-                max_assignments=5,
-                question=questionform,
-                reward=Price(amount=0.05),
-                 #Determines information returned by method in API, not super important
-                response_groups=('Minimal', 'HITDetail'),
-                qualifications=Qualifications(),
-                )
-
-            # The response included several fields that will be helpful later
-            hit_type_id = create_hit_result[0].HITTypeId
-            hit_id = create_hit_result[0].HITId
-            print "Your HIT has been created. You can see it at this link:"
-            print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
-            print "Your HIT ID is: {}".format(hit_id)
-            '''
+            post_HIT('verify', request.form['trial'])
 
     elif request.form['task'] == 'verify':
         v = []
@@ -336,36 +310,10 @@ def submit():
         conn.commit()
 
         count = get_trial_count('verify', request.form)
-        if count >= 10:
+        if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
-
-            '''
-            # Start the verify task
-            url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % ('rank', request.form['trial'])
-            questionform = ExternalQuestion(url, 1200)
-            create_hit_result = connection.create_hit(
-                title="Help locate things in Google Street View — one question only!",
-                description="Participate in a short study to find things in Google Street View",
-                keywords=["find", "locate", "quick"],
-                #duration is in seconds
-                duration = 60*5,
-                #max_assignments will set the amount of independent copies of the task (turkers can only see one)
-                max_assignments=5,
-                question=questionform,
-                reward=Price(amount=0.05),
-                 #Determines information returned by method in API, not super important
-                response_groups=('Minimal', 'HITDetail'),
-                qualifications=Qualifications(),
-                )
-
-            # The response included several fields that will be helpful later
-            hit_type_id = create_hit_result[0].HITTypeId
-            hit_id = create_hit_result[0].HITId
-            print "Your HIT has been created. You can see it at this link:"
-            print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
-            print "Your HIT ID is: {}".format(hit_id)
-            '''
+            post_HIT('rank', request.form['trial'])
 
     elif request.form['task'] == 'rank':
 
@@ -398,7 +346,7 @@ def submit():
         conn.commit()
 
         count = get_trial_count('rank', request.form)
-        if count >= 10:
+        if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
 
@@ -472,6 +420,34 @@ def get_trial_count(task, form):
     count = cursor.fetchone()[0]
     print "---TASK PERFORMED %i TIMES" % count
     return count
+
+def post_HIT(task, trial):
+    amount = 0.10
+    # Start the verify task
+    url = "https://cs279-final-project.herokuapp.com/%s?trial=%s" % (task, trial)
+    questionform = ExternalQuestion(url, 1200)
+    create_hit_result = connection.create_hit(
+        title="Help locate things in Google Street View — one question only!",
+        description="Participate in a short study to find things in Google Street View",
+        keywords=["find", "locate", "quick"],
+        #duration is in seconds
+        duration = 60*5,
+        #max_assignments will set the amount of independent copies of the task (turkers can only see one)
+        max_assignments=TASK_LIMIT,
+        question=questionform,
+        reward=Price(amount),
+         #Determines information returned by method in API, not super important
+        response_groups=('Minimal', 'HITDetail'),
+        qualifications=Qualifications(),
+        )
+
+    # The response included several fields that will be helpful later
+    hit_type_id = create_hit_result[0].HITTypeId
+    hit_id = create_hit_result[0].HITId
+    print "Your HIT has been created. You can see it at this link:"
+    print "https://workersandbox.mturk.com/mturk/preview?groupId={}".format(hit_type_id)
+    print "Your HIT ID is: {}".format(hit_id)
+    return
 
 # HELPER FUNCTION TO CONVERT GSV ZOOM TO FOV
 def zoom_to_FOV(zoom):
