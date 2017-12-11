@@ -19,9 +19,16 @@ grouped = grouped.reset_index()
 
 for trial in grouped.trial.unique():
     print "\nBEST FOR TRIAL %i: " % trial,
-    best_id = grouped[grouped.trial == trial].sort_values('rank')['value'].head(n=1).values[0]
-    print best_id
+    best_id = grouped[grouped.trial == trial].sort_values('rank')['value'].iloc[0]
+    runner_up = grouped[grouped.trial == trial].sort_values('rank')['value'].iloc[1]
+    print best_id, "(runner-up is", runner_up, ")"
+
     if best_id == 9999:
-        print find[find.trial == trial].original.head(n=1).values[0]
+        print "**",find[find.trial == trial].original.iloc[0]
     else:
-        print find[find.find_id == best_id].updated.values[0]
+        print "**",find[find.find_id == best_id].updated.iloc[0]
+
+    if runner_up == 9999:
+        print "*",find[find.trial == trial].original.iloc[0]
+    else:
+        print "*",find[find.find_id == runner_up].updated.iloc[0]
