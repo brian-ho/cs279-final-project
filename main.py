@@ -275,7 +275,7 @@ def submit():
         if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
-            post_HIT('verify', request.form['trial'])
+            # post_HIT('verify', request.form['trial'])
 
     elif request.form['task'] == 'verify':
         v = []
@@ -313,7 +313,7 @@ def submit():
         if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
-            post_HIT('rank', request.form['trial'])
+            # post_HIT('rank', request.form['trial'])
 
     elif request.form['task'] == 'rank':
 
