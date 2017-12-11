@@ -165,12 +165,12 @@ def verify():
 
             if "hitId" in request.args:
 
-                if get_trial_count('find', trial_info[3], trial_info[4]) >= TASK_LIMIT:
+                if get_trial_count('verify', trial_info[3], trial_info[4]) >= TASK_LIMIT:
                     print "---SORRY!"
 
                     print "---DISABLING HIT"
                     connection.disable_hit(request.args.get("hitId"))
-                    
+
                     resp = make_response(render_template("sorry.html"))
                     resp.headers['x-frame-options'] = 'this_can_be_anything'
                     return resp
@@ -241,7 +241,7 @@ def rank():
 
         if "hitId" in request.args:
 
-            if get_trial_count('find', trial_info[3], trial_info[4]) >= TASK_LIMIT:
+            if get_trial_count('rank', trial_info[3], trial_info[4]) >= TASK_LIMIT:
                 print "---SORRY!"
                 resp = make_response(render_template("sorry.html"))
                 resp.headers['x-frame-options'] = 'this_can_be_anything'
