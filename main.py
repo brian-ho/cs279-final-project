@@ -84,17 +84,25 @@ def find():
 
         else:
             if "hitId" in request.args:
-                render_data = {
-                    "amazon_host": AMAZON_HOST,
-                    "hit_id": request.args.get("hitId"),
-                    "assignment_id" : request.args.get("assignmentId"),
-                    "worker_id": request.args.get("workerId"),
-                    "trial": trial_info[3],
-                    "gen": trial_info[4],
-                    "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-                    "description": trial_info[2],
-                    "gmaps_url": GMAPS_URL
-                    }
+
+                if get_trial_count('find', trial_info[3], trial_info[4]) >= TASK_LIMIT:
+                    print "---SORRY!"
+                    resp = make_response(render_template("sorry.html"))
+                    resp.headers['x-frame-options'] = 'this_can_be_anything'
+                    return resp
+
+                else:
+                    render_data = {
+                        "amazon_host": AMAZON_HOST,
+                        "hit_id": request.args.get("hitId"),
+                        "assignment_id" : request.args.get("assignmentId"),
+                        "worker_id": request.args.get("workerId"),
+                        "trial": trial_info[3],
+                        "gen": trial_info[4],
+                        "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                        "description": trial_info[2],
+                        "gmaps_url": GMAPS_URL
+                        }
 
             else:
                 render_data = {
@@ -136,8 +144,6 @@ def verify():
             return resp
 
         else:
-        #     for arg in request.args:
-        #         print arg, request.args[arg]
 
             print "---GETTING FIND TASKS"
             # query = "SELECT pitch, heading, zoom, find_id FROM find WHERE trial = %(trial_)s AND gen = %(gen_)s AND hit_id NOT LIKE 'dummy%%' ORDER BY time DESC LIMIT 4;"
@@ -151,19 +157,27 @@ def verify():
                 imgs.append([result[0],result[1],zoom_to_FOV(result[2]),result[3]])
 
             if "hitId" in request.args:
-                render_data = {
-                    "amazon_host": AMAZON_HOST,
-                    "hit_id": request.args.get("hitId"),
-                    "assignment_id" : request.args.get("assignmentId"),
-                    "worker_id": request.args.get("workerId"),
-                    "trial": trial_info[3],
-                    "gen": trial_info[4],
-                    "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-                    "description": trial_info[2],
-                    "images": imgs,
-                    "total": len(imgs),
-                    "gmaps_key": GMAPS_KEY
-                    }
+
+                if get_trial_count('find', trial_info[3], trial_info[4]) >= TASK_LIMIT:
+                    print "---SORRY!"
+                    resp = make_response(render_template("sorry.html"))
+                    resp.headers['x-frame-options'] = 'this_can_be_anything'
+                    return resp
+
+                else:
+                    render_data = {
+                        "amazon_host": AMAZON_HOST,
+                        "hit_id": request.args.get("hitId"),
+                        "assignment_id" : request.args.get("assignmentId"),
+                        "worker_id": request.args.get("workerId"),
+                        "trial": trial_info[3],
+                        "gen": trial_info[4],
+                        "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                        "description": trial_info[2],
+                        "images": imgs,
+                        "total": len(imgs),
+                        "gmaps_key": GMAPS_KEY
+                        }
             else:
                 render_data = {
                     "amazon_host": AMAZON_HOST,
@@ -215,17 +229,25 @@ def rank():
         descriptions.append({'find_id':9999, 'text':trial_info[2]})
 
         if "hitId" in request.args:
-            render_data = {
-                "amazon_host": AMAZON_HOST,
-                "hit_id": request.args.get("hitId"),
-                "assignment_id" : request.args.get("assignmentId"),
-                "worker_id": request.args.get("workerId"),
-                "trial": trial_info[3],
-                "gen": trial_info[4],
-                "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
-                "descriptions": descriptions,
-                "gmaps_url": GMAPS_URL
-                }
+
+            if get_trial_count('find', trial_info[3], trial_info[4]) >= TASK_LIMIT:
+                print "---SORRY!"
+                resp = make_response(render_template("sorry.html"))
+                resp.headers['x-frame-options'] = 'this_can_be_anything'
+                return resp
+
+            else:
+                render_data = {
+                    "amazon_host": AMAZON_HOST,
+                    "hit_id": request.args.get("hitId"),
+                    "assignment_id" : request.args.get("assignmentId"),
+                    "worker_id": request.args.get("workerId"),
+                    "trial": trial_info[3],
+                    "gen": trial_info[4],
+                    "trial_info": {'lat':trial_info[0], 'lng':trial_info[1]},
+                    "descriptions": descriptions,
+                    "gmaps_url": GMAPS_URL
+                    }
         else:
             render_data = {
                 "amazon_host": AMAZON_HOST,
@@ -271,7 +293,7 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('find', request.form)
+        count = get_trial_count('find', request.form['trial'], request.form['gen'])
         if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
@@ -309,7 +331,7 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('verify', request.form)
+        count = get_trial_count('verify', request.form['trial'], request.form['gen'])
         if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
@@ -345,7 +367,7 @@ def submit():
             })
         conn.commit()
 
-        count = get_trial_count('rank', request.form)
+        count = get_trial_count('rank', request.form['trial'], request.form['gen'])
         if count >= TASK_LIMIT:
             print "---DISABLING HIT"
             connection.disable_hit(request.form['hitId'])
@@ -403,7 +425,7 @@ def workerIdCheck(args_, trial):
         return False
 
 # FUNCTION TO CHECK HOW MANY TASKS PER TRIAL
-def get_trial_count(task, form):
+def get_trial_count(task, trial_, gen_):
 
     if task == 'find':
         # query = "SELECT COUNT(*) FROM find WHERE hit_id = %(hitId_)s;"
@@ -415,7 +437,7 @@ def get_trial_count(task, form):
         # query = "SELECT COUNT(*) FROM rank WHERE hit_id = %(hitId_)s;"
         query = "SELECT COUNT(*) FROM rank WHERE trial = %(trial_)s AND gen = %(gen_)s;"
 
-    cursor.execute(query, {'trial_':form['trial'], 'gen_':form['gen']})
+    cursor.execute(query, {'trial_':trial_, 'gen_':gen_})
     conn.commit()
     count = cursor.fetchone()[0]
     print "---TASK PERFORMED %i TIMES" % count
