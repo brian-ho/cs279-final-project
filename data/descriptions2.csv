@@ -1,10 +1,1 @@
-"id","gen","trial","lat","lng","description"
-1,0,0,40.7600509,-73.9846787,"Find a brown tarp."
-2,0,1,40.7667633,-73.6665733,"Find the trash can right next to a tree."
-3,0,2,-16.7362958,-69.7134053,"Find the yellow sign."
-4,1,0,40.7600509,-73.9846787,"Find a brown tarp."
-5,1,1,40.7667633,-73.6665733,"Find the trash can right next to a tree."
-6,1,2,-16.7362958,-69.7134053,"Find the yellow sign with the animal on it. "
-7,2,0,40.7600509,-73.9846787,"Brown tarp next to hotdog vendor."
-8,2,1,40.7667633,-73.6665733,"find the trash can next to the tree on the right side of the street"
-9,2,2,-16.7362958,-69.7134053,"Find the yellow sign with the animal depiction on the right side of the road."
+﻿id,gen,trial,lat,lng,description1,0,0,40.7600509,-73.9846787,Find a brown tarp.2,0,1,40.7667633,-73.6665733,Find the trash can right next to a tree.3,0,2,-16.7362958,-69.7134053,Find the yellow sign.4,1,0,40.7600509,-73.9846787,Find a brown tarp.5,1,1,40.7667633,-73.6665733,Find the trash can right next to a tree.6,1,2,-16.7362958,-69.7134053,Find the yellow sign with the animal on it. 7,2,0,40.7600509,-73.9846787,Brown tarp next to hotdog vendor.8,2,1,40.7667633,-73.6665733,find the trash can next to the tree on the right side of the street9,2,2,-16.7362958,-69.7134053,Find the yellow sign with the animal depiction on the right side of the road.10,3,0,40.7600509,-73.9846787,Brown tarp next to hotdog vendor.11,3,1,40.719391,-73.5094,find the trash can next to the tree on the right side of the street12,3,2,-16.7362958,-69.7134053,Find the yellow sign with the animal depiction on the right side of the road.

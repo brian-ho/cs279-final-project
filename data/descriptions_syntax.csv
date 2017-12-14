@@ -1,0 +1,34 @@
+,id,gen,trial,lat,lng,description,exp,adj,prep,noun
+0,1,0,0,40.7600509,-73.9846787,Find a brown tarp.,fiveMT,1,1,1
+1,2,0,1,40.7667633,-73.6665733,Find the trash can right next to a tree.,fiveMT,1,1,2
+2,3,0,2,-16.7362958,-69.7134053,Find the yellow sign.,fiveMT,1,1,1
+3,4,1,0,40.7600509,-73.9846787,Find a brown tarp.,fiveMT,1,1,1
+4,5,1,1,40.7667633,-73.6665733,Find the trash can right next to a tree.,fiveMT,1,1,2
+5,6,1,2,-16.7362958,-69.7134053,Find the yellow sign with the animal on it. ,fiveMT,1,3,2
+6,7,2,0,40.7600509,-73.9846787,Brown tarp next to hotdog vendor.,fiveMT,1,0,2
+7,8,2,1,40.7667633,-73.6665733,find the trash can next to the tree on the right side of the street,fiveMT,1,2,4
+8,9,2,2,-16.7362958,-69.7134053,Find the yellow sign with the animal depiction on the right side of the road.,fiveMT,3,4,4
+9,10,3,0,40.7600509,-73.9846787,Brown tarp next to hotdog vendor.,fiveMT,1,0,2
+10,11,3,1,40.719391,-73.5094,find the trash can next to the tree on the right side of the street,fiveMT,1,2,4
+11,12,3,2,-16.7362958,-69.7134053,Find the yellow sign with the animal depiction on the right side of the road.,fiveMT,3,4,4
+12,1,0,0,40.7600509,-73.9846787,Find a brown tarp.,tenMT,1,1,1
+13,2,0,1,40.7667633,-73.6665733,Find the trash can right next to a tree.,tenMT,1,1,2
+14,3,0,2,-16.7362958,-69.7134053,Find the yellow sign.,tenMT,1,1,1
+15,4,1,0,40.7600509,-73.9846787,"Brown tarp wrapped on object near yellow and red umbrella, left on side of street when facing Monster billboard.",tenMT,2,4,8
+16,5,1,1,40.7667633,-73.6665733,Black trash can at the end of the right closest driveway on the sidewalk adjacent to parked silver truck.,tenMT,4,3,6
+17,6,1,2,-16.7362958,-69.7134053,Please turn the street view to the left. You will see the yellow sign right away. ,tenMT,1,0,5
+18,7,2,0,40.7600509,-73.9846787,"Brown tarp wrapped on object near yellow and red umbrella, left on side of street when facing Monster billboard.",tenMT,2,4,8
+19,8,2,1,40.7667633,-73.6665733,"Black roller trash cab on the side walk at the end of the driveway with the SUV parked in it, at the house with a silver trucked parked out front. You may have to move the camera to the opposite side of the from the original view.",tenMT,2,9,15
+20,9,2,2,-16.7362958,-69.7134053,Please turn the street view to the left. You will see the yellow sign right away. ,tenMT,1,0,5
+21,7,3,0,40.7600509,-73.9846787,"Brown tarp wrapped on object under yellow and red umbrella, left on side of street when facing Monster billboard.",tenMT,1,4,9
+22,8,3,1,40.7667633,-73.6665733,"Black roller trash cab on the side walk at the end of the driveway with the SUV parked in it, at the house with a silver trucked parked out front. You may have to move the camera to the opposite side of the from the original view.Ê",tenMT,2,9,15
+23,9,3,2,-16.7362958,-69.7134053,Please turn the street view to the left. You will see the yellow sign right away.,tenMT,1,0,5
+24,1,0,0,40.7600509,-73.9846787,Find a brown tarp.,sevenMT,1,1,1
+25,3,0,2,-16.7362958,-69.7134053,Find the yellow sign.,sevenMT,1,1,1
+26,2,0,1,40.719391,-73.5094,Find the bench.,sevenMT,0,1,1
+27,4,1,0,40.7600509,-73.9846787,"A row of umbrellas line the edge of the street along with chairs and what appears to be vendor booths. Midway down the street, a large brown tarp is visible and appears to be securing property or merchandise while a man sits in a chair with his back to the bungle secured by the brown tarp.",sevenMT,6,9,16
+28,5,1,1,40.719391,-73.5094,The bench is on a brick patio in front of the white house with the tan roof that has a white SUV parked in the driveway.,sevenMT,2,5,10
+29,6,1,2,-16.7362958,-69.7134053,Find the yellow sign.,sevenMT,1,1,1
+30,7,2,0,40.7600509,-73.9846787,"A row of umbrellas line the edge of the street along with chairs and what appears to be vendor booths. Midway down the street, a large brown tarp is visible and appears to be securing property or merchandise while a man sits in a chair with his back to the bungle secured by the brown tarp.",sevenMT,6,9,16
+31,8,2,1,40.719391,-73.5094,The bench is located in front of the white house. There are bricks on the patio. There is a white SUV in the driveway. The house appears to have a second story or attic and a tan roof. There are columns in front of the front door. ,sevenMT,6,6,13
+32,9,2,2,-16.7362958,-69.7134053,Turn to find the yellow sign.,sevenMT,1,0,2
